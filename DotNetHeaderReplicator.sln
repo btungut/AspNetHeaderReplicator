@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNetHeaderReplicator", "src\DotNetHeaderReplicator.csproj", "{F5982B7F-FC06-4CD6-85A2-8AEAA199497D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNetHeaderReplicator.Tests", "tests\DotNetHeaderReplicator.Tests.csproj", "{ADAD202F-9040-49A2-BD80-AFE79C11B16D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F5982B7F-FC06-4CD6-85A2-8AEAA199497D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F5982B7F-FC06-4CD6-85A2-8AEAA199497D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F5982B7F-FC06-4CD6-85A2-8AEAA199497D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F5982B7F-FC06-4CD6-85A2-8AEAA199497D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ADAD202F-9040-49A2-BD80-AFE79C11B16D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ADAD202F-9040-49A2-BD80-AFE79C11B16D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ADAD202F-9040-49A2-BD80-AFE79C11B16D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ADAD202F-9040-49A2-BD80-AFE79C11B16D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
