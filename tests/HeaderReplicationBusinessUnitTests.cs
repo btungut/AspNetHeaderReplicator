@@ -55,5 +55,20 @@ public class HeaderReplicationBusinessUnitTests
     }
 
 
+    [Fact]
+    public void HeaderReplicationBusiness_Should_ReturnEmptyDictionary_WhenRequestHeadersIsEmpty()
+    {
+        // Arrange
+        IEnumerable<string> allowedPrefixes = GetEmptyEnumerable();
+        IEnumerable<string> ignoredSentences = GetEmptyEnumerable();
 
+        var business = new HeaderReplicationBusiness(false, allowedPrefixes, ignoredSentences);
+        var requestHeaders = new HeaderDictionary();
+
+        // Act
+        var result = business.GetReplicatedHeaders(requestHeaders);
+
+        // Assert
+        Assert.Empty(result);
+    }
 }
