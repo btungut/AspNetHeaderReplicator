@@ -20,9 +20,9 @@ public class HeaderReplicationBusiness
     {
         AllowAll = allowAll;
 
-        if(!AllowAll && allowedPrefixes == null)
-            throw new ArgumentNullException("The allowedPrefixes cannot be null when AllowAll is set to false.");
-        
+        if(!AllowAll && (allowedPrefixes == null || allowedPrefixes.Count() == 0))
+            throw new ArgumentNullException("The allowedPrefixes cannot be null or empty when AllowAll is set to false.");
+
         if(!AllowAll && ignoredSentences == null)
             throw new ArgumentNullException("The ignoredSentences cannot be null when AllowAll is set to false.");
 
