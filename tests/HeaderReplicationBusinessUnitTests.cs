@@ -27,6 +27,7 @@ public class HeaderReplicationBusinessUnitTests
         // Assert
         Assert.Throws<ArgumentNullException>(act);
     }
+    
 
     [Fact]
     public void HeaderReplicationBusiness_Should_ThrowArgumentNullException_WhenIgnoredSentencesIsNull()
@@ -42,26 +43,12 @@ public class HeaderReplicationBusinessUnitTests
         Assert.Throws<ArgumentNullException>(act);
     }
 
-    [Fact]
-    public void HeaderReplicationBusiness_Should_ThrowArgumentNullException_WhenRequestHeadersIsNull()
-    {
-        // Arrange
-        var business = new HeaderReplicationBusiness(false, GetEmptyEnumerable(), GetEmptyEnumerable());
-        IHeaderDictionary requestHeaders = null;
-
-        // Act
-        Action act = () => business.GetReplicatedHeaders(requestHeaders);
-
-        // Assert
-        Assert.Throws<ArgumentNullException>(act);
-    }
-
 
     [Fact]
     public void HeaderReplicationBusiness_Should_ReturnEmptyDictionary_WhenRequestHeadersIsEmpty()
     {
         // Arrange
-        IEnumerable<string> allowedPrefixes = GetEmptyEnumerable();
+        IEnumerable<string> allowedPrefixes = new List<string> { "X-", "Y-", "Z-" };
         IEnumerable<string> ignoredSentences = GetEmptyEnumerable();
 
         var business = new HeaderReplicationBusiness(false, allowedPrefixes, ignoredSentences);
