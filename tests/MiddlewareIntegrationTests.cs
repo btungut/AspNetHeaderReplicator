@@ -127,7 +127,7 @@ public class MiddlewareIntegrationTests
         // Assert all response headers are redacted
         foreach (var header in response.Headers)
         {
-            Assert.Equal(HeaderReplicatorMiddleware.RedactedValue, response.Headers.GetValues(header.Key).First());
+            Assert.Equal(HeaderReplicationBusiness.RedactedValue, response.Headers.GetValues(header.Key).First());
         }
     }
 
