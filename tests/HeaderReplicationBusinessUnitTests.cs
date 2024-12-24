@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Primitives;
 using Xunit;
 
 namespace DotNetHeaderReplicator.Tests;
@@ -10,6 +11,7 @@ namespace DotNetHeaderReplicator.Tests;
 public class HeaderReplicationBusinessUnitTests
 {
     private IEnumerable<string> GetEmptyEnumerable() => Enumerable.Empty<string>();
+    private StringValues GetRandomValue() => new StringValues(Guid.NewGuid().ToString());
     
 
     [Fact]
@@ -71,4 +73,34 @@ public class HeaderReplicationBusinessUnitTests
         // Assert
         Assert.Empty(result);
     }
+
+    [Fact]
+    public void HeaderReplicationBusiness_Should_ReturnAllowedHeaders_WhenAllowedPrefixesAreProvided()
+    {
+        // Arrange
+        var allowedPrefixes = new List<string> { "X-", "Y-", "Z-" };
+        var ignoredSentences = GetEmptyEnumerable();
+
+        var business = new HeaderReplicationBusiness(false, allowedPrefixes, ignoredSentences);
+        var requestHeaders = new HeaderDictionary
+        {
+            { "A-Test-Header", GetRandomValue() },
+            { "B-Test-Header", GetRandomValue() },
+            { "C-Test-Header", GetRandomValue() }
+        };
+        foreach (var prefix in allowedPrefixes)
+            requestHeaders.Add(prefix + "Test-Header", GetRandomValue());
+
+        // Act
+        var responseHeaders = business.GetReplicatedHeaders(requestHeaders);
+
+        // Assert
+        Assert.Equal(allowedPrefixes.Count, responseHeaders.Count);
+        foreach (var header in responseHeaders)
+        {
+            Assert.Contains(allowedPrefixes, header.Key.StartsWith);
+        }
+    }
+
+
 }
