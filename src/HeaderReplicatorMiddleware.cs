@@ -29,23 +29,23 @@ public class HeaderReplicatorMiddleware : IMiddleware
                 continue;
 
             var key = header.Key;
+            var keyPrefix = GetHeaderKeyPrefix(key);
             var value = header.Value;
 
             if (_config.AllowAll)
             {
                 toBeAddedHeaders[key] = value;
+                continue;
             }
-            else
-            {
-                if (_config.AllowedHeaderPrefixes.Any(prefix => key.StartsWith(prefix, StringComparison.OrdinalIgnoreCase)))
-                {
-                    if (_config.IgnoredHeaderSentences.Any(sentence => key.Contains(sentence, StringComparison.OrdinalIgnoreCase)))
-                    {
-                        value = RedactedValue;
-                    }
 
-                    toBeAddedHeaders[key] = value;
+            if (_config.AllowedHeaderPrefixes.Contains(keyPrefix, StringComparer.OrdinalIgnoreCase))
+            {
+                if (_config.IgnoredHeaderSentences.Any(sentence => key.Contains(sentence, StringComparison.OrdinalIgnoreCase)))
+                {
+                    value = RedactedValue;
                 }
+
+                toBeAddedHeaders[key] = value;
             }
         }
 
@@ -60,6 +60,16 @@ public class HeaderReplicatorMiddleware : IMiddleware
         });
 
         await next(context);
+    }
+
+    private string GetHeaderKeyPrefix(string key)
+    {
+        if (string.IsNullOrEmpty(key)) throw new ArgumentException("The key cannot be null or empty.", nameof(key));
+
+        var indexOfDash = key.IndexOf('-');
+        if (indexOfDash < 0) return key;
+
+        return key.Substring(0, indexOfDash + 1);
     }
 }
 
