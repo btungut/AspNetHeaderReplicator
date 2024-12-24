@@ -1,7 +1,7 @@
 public class HeaderReplicatorConfigurationBuilder
 {
-    private static readonly string[] __def_allowedHeaderPrefixes = new[] { "X-", "My-", "Req-", "Trace-", "Debug", "Pass-" };
-    private static readonly string[] __def_ignoredHeaderSentences = new[] { "auth", "credential", "token", "pass", "secret", "hash", "cert" };
+    internal static readonly string[] __def_allowedHeaderPrefixes = new[] { "X-", "My-", "Req-", "Trace-", "Debug-", "Verbose-" };
+    internal static readonly string[] __def_ignoredHeaderSentences = new[] { "auth", "credential", "token", "pass", "secret", "hash", "cert" };
 
 
     private bool _allowAll;

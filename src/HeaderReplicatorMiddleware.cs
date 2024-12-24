@@ -3,10 +3,10 @@ namespace Microsoft.AspNetCore.Http;
 
 public class HeaderReplicatorMiddleware : IMiddleware
 {
-    const string RedactedValue = $"REDACTED_by_{nameof(HeaderReplicatorMiddleware)}";
+    internal const string RedactedValue = $"REDACTED_by_{nameof(HeaderReplicatorMiddleware)}";
     private readonly HeaderReplicatorConfigurationBuilder.HeaderReplicatorConfiguration _config;
 
-    internal HeaderReplicatorMiddleware(HeaderReplicatorConfigurationBuilder.HeaderReplicatorConfiguration config)
+    public HeaderReplicatorMiddleware(HeaderReplicatorConfigurationBuilder.HeaderReplicatorConfiguration config)
     {
         _config = config ?? throw new ArgumentNullException(nameof(config));
     }
