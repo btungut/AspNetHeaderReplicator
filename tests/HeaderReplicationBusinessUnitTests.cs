@@ -14,9 +14,6 @@ namespace DotNetHeaderReplicator.Tests;
 
 public class HeaderReplicationBusinessUnitTests
 {
-    private IEnumerable<string> GetEmptyEnumerable() => Enumerable.Empty<string>();
-    private StringValues GetRandomValue() => new StringValues(Guid.NewGuid().ToString());
-
     [Fact]
     public void Ctor_ShouldThrowException_WhenConfigIsNull()
     {
@@ -35,7 +32,7 @@ public class HeaderReplicationBusinessUnitTests
     {
         // Arrange
         var mockLogger = Mocked.GetLogger<HeaderReplicationBusiness>();
-        var mockConfig = Mocked.GetHeaderReplicatorConfiguration(false, GetEmptyEnumerable(), null);
+        var mockConfig = Mocked.GetHeaderReplicatorConfiguration(false, Helpers.GetEmptyEnumerable(), null);
 
         // Act
         Action act = () => new HeaderReplicationBusiness(mockConfig, mockLogger);
@@ -49,7 +46,7 @@ public class HeaderReplicationBusinessUnitTests
     {
         // Arrange
         var mockLogger = Mocked.GetLogger<HeaderReplicationBusiness>();
-        var mockConfig = Mocked.GetHeaderReplicatorConfiguration(false, null, GetEmptyEnumerable());
+        var mockConfig = Mocked.GetHeaderReplicatorConfiguration(false, null, Helpers.GetEmptyEnumerable());
 
         // Act
         Action act = () => new HeaderReplicationBusiness(mockConfig, mockLogger);
@@ -62,7 +59,7 @@ public class HeaderReplicationBusinessUnitTests
     public void Ctor_ShouldThrowException_WhenLoggerIsNull()
     {
         // Arrange
-        var mockConfig = Mocked.GetHeaderReplicatorConfiguration(false, GetEmptyEnumerable(), GetEmptyEnumerable());
+        var mockConfig = Mocked.GetHeaderReplicatorConfiguration(false, Helpers.GetEmptyEnumerable(), Helpers.GetEmptyEnumerable());
 
         // Act
         Action act = () => new HeaderReplicationBusiness(mockConfig, null);
@@ -76,7 +73,7 @@ public class HeaderReplicationBusinessUnitTests
     {
         // Arrange
         var mockLogger = Mocked.GetLogger<HeaderReplicationBusiness>();
-        var mockConfig = Mocked.GetHeaderReplicatorConfiguration(false, GetEmptyEnumerable(), GetEmptyEnumerable());
+        var mockConfig = Mocked.GetHeaderReplicatorConfiguration(false, Helpers.GetEmptyEnumerable(), Helpers.GetEmptyEnumerable());
         var business = new HeaderReplicationBusiness(mockConfig, mockLogger);
 
         // Act
@@ -91,7 +88,7 @@ public class HeaderReplicationBusinessUnitTests
     {
         // Arrange
         var mockLogger = Mocked.GetLogger<HeaderReplicationBusiness>();
-        var mockConfig = Mocked.GetHeaderReplicatorConfiguration(false, GetEmptyEnumerable(), GetEmptyEnumerable());
+        var mockConfig = Mocked.GetHeaderReplicatorConfiguration(false, Helpers.GetEmptyEnumerable(), Helpers.GetEmptyEnumerable());
         var business = new HeaderReplicationBusiness(mockConfig, mockLogger);
         var requestHeaders = new HeaderDictionary();
 

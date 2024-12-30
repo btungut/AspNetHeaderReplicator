@@ -7,7 +7,7 @@ public interface IHeaderReplicatorConfiguration
     IReadOnlyCollection<string> IgnoredHeaderSentences { get; }
 }
 
-public class HeaderReplicatorConfiguration : IHeaderReplicatorConfiguration
+internal class HeaderReplicatorConfiguration : IHeaderReplicatorConfiguration
 {
     public bool AllowAll { get; internal set; }
 

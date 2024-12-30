@@ -7,6 +7,9 @@ namespace DotNetHeaderReplicator.Tests;
 
 internal static class Helpers
 {
+    public static IEnumerable<string> GetEmptyEnumerable() => Enumerable.Empty<string>();
+    public static StringValues GetRandomValue() => new StringValues(Guid.NewGuid().ToString());
+    
     public static IHeaderDictionary GetMergedHeaders(params IHeaderDictionary[] headers)
     {
         if(headers == null || headers.Length == 0)
