@@ -1,3 +1,5 @@
+namespace DotNetHeaderReplicator;
+
 public class HeaderReplicatorConfigurationBuilder
 {
     internal static readonly string[] __def_allowedHeaderPrefixes = new[] { "X-", "My-", "Req-", "Trace-", "Debug-", "Verbose-" };
@@ -7,6 +9,10 @@ public class HeaderReplicatorConfigurationBuilder
     private bool _allowAll;
     private readonly HashSet<string> _allowedPrefixes;
     private readonly HashSet<string> _ignoredSentences;
+
+
+    private HeaderReplicatorConfiguration _builtConfiguration;
+    private static object _locker = new object();
 
     internal HeaderReplicatorConfigurationBuilder()
     {
@@ -37,6 +43,9 @@ public class HeaderReplicatorConfigurationBuilder
 
     public HeaderReplicatorConfigurationBuilder AllowHeaderPrefixes(params string[] prefixes)
     {
+        if (prefixes == null) throw new ArgumentNullException(nameof(prefixes));
+        if (prefixes.Length == 0) throw new ArgumentException("The prefixes cannot be empty.", nameof(prefixes));
+
         foreach (var prefix in prefixes)
             AllowHeaderPrefix(prefix);
 
@@ -56,6 +65,9 @@ public class HeaderReplicatorConfigurationBuilder
 
     public HeaderReplicatorConfigurationBuilder IgnoreHeaderSentences(params string[] sentences)
     {
+        if (sentences == null) throw new ArgumentNullException(nameof(sentences));
+        if (sentences.Length == 0) throw new ArgumentException("The sentences cannot be empty.", nameof(sentences));
+
         foreach (var sentence in sentences)
             IgnoreHeaderSentence(sentence);
 
@@ -65,8 +77,8 @@ public class HeaderReplicatorConfigurationBuilder
     public HeaderReplicatorConfigurationBuilder AllowAll()
     {
         _allowAll = true;
-        _allowedPrefixes?.Clear();
-        _ignoredSentences?.Clear();
+        _allowedPrefixes.Clear();
+        _ignoredSentences.Clear();
         return this;
     }
 
@@ -92,23 +104,25 @@ public class HeaderReplicatorConfigurationBuilder
         return this;
     }
 
-    public HeaderReplicatorConfiguration Build() => new(_allowAll, _allowedPrefixes, _ignoredSentences);
-
-    public class HeaderReplicatorConfiguration
+    public IHeaderReplicatorConfiguration Build()
     {
-        public bool AllowAll { get; internal set; }
-        public HashSet<string> AllowedHeaderPrefixes { get; internal set; }
-        public HashSet<string> IgnoredHeaderSentences { get; internal set; }
-
-        internal HeaderReplicatorConfiguration(bool allowAll, IEnumerable<string> allowedPrefixes, IEnumerable<string> ignoredSentences)
+        Func<bool> isBuilt = () => _builtConfiguration != null;
+        Action throwIfBuilt = () =>
         {
-            AllowAll = allowAll;
+            if (isBuilt())
+                throw new InvalidOperationException("This instance of HeaderReplicatorConfigurationBuilder has already been built.");
+        };
 
-            if (AllowAll && (allowedPrefixes == null || ignoredSentences == null))
-                throw new ArgumentNullException("The allowedPrefixes and ignoredSentences cannot be null when AllowAll is set to true.");
+        throwIfBuilt();
 
-            AllowedHeaderPrefixes = AllowAll ? [] : new HashSet<string>(allowedPrefixes, StringComparer.OrdinalIgnoreCase);
-            IgnoredHeaderSentences = AllowAll ? [] : new HashSet<string>(ignoredSentences, StringComparer.OrdinalIgnoreCase);
+        lock (_locker)
+        {
+            throwIfBuilt();
+
+            _builtConfiguration = new HeaderReplicatorConfiguration(_allowAll, _allowedPrefixes, _ignoredSentences);
+            return _builtConfiguration;
         }
     }
+
 }
+

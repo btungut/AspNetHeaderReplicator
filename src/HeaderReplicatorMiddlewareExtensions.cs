@@ -1,3 +1,4 @@
+using DotNetHeaderReplicator;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 
@@ -22,7 +23,7 @@ public static class HeaderReplicatorMiddlewareExtensions
         configure.Invoke(builder);
         var opt = builder.Build();
 
-        services.AddSingleton<HeaderReplicatorConfigurationBuilder.HeaderReplicatorConfiguration>(opt);
+        services.AddSingleton<IHeaderReplicatorConfiguration>(opt);
         services.AddScoped<HeaderReplicatorMiddleware>();
 
         return services;
