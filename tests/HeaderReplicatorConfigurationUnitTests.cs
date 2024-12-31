@@ -109,4 +109,32 @@ public class HeaderReplicatorConfigurationUnitTests
         Assert.Throws<InvalidOperationException>(act);
     }
 
+    [Fact]
+    public void Ctor_ShouldCreateInstance_WhenAllowAllIsFalse_And_AllowedPrefixesAndIgnoredSentencesAreEmpty()
+    {
+        // Arrange
+        bool isAllowAll = false;
+        HashSet<string> allowedPrefixes = new HashSet<string>
+        {
+            Helpers.GetRandomValue(),
+            Helpers.GetRandomValue(),
+            Helpers.GetRandomValue()
+        };
+        HashSet<string> ignoredSentences = new HashSet<string>
+        {
+            Helpers.GetRandomValue(),
+            Helpers.GetRandomValue(),
+            Helpers.GetRandomValue()
+        };
+
+        // Act
+        var config = new HeaderReplicatorConfiguration(isAllowAll, allowedPrefixes, ignoredSentences);
+
+        // Assert
+        Assert.NotNull(config);
+        Assert.Equal(isAllowAll, config.AllowAll);
+        Assert.Equal(allowedPrefixes.OrderBy(x => x), config.AllowedHeaderPrefixes.OrderBy(x => x));
+        Assert.Equal(ignoredSentences.OrderBy(x => x), config.IgnoredHeaderSentences.OrderBy(x => x));
+    }
+
 }
