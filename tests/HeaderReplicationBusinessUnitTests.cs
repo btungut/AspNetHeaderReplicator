@@ -157,8 +157,13 @@ public class HeaderReplicationBusinessUnitTests
         var result = business.GetReplicatedHeaders(requestHeaders);
 
         // Assert
-        Assert.Equal(__requestHeaders_allowed.Count, result.Count);
-        Assert.True(Helpers.AreHeaderDictionariesEqual(__requestHeaders_allowed, result));
+        foreach (var header in result)
+        {
+            if (__requestHeaders_ignored.ContainsKey(header.Key))
+                Assert.Equal(HeaderReplicationBusiness.RedactedValue, header.Value);
+            else
+                Assert.Equal(__requestHeaders_allowed[header.Key], header.Value);
+        }
     }
 
     [Fact]
@@ -188,15 +193,20 @@ public class HeaderReplicationBusinessUnitTests
         var result = business.GetReplicatedHeaders(requestHeaders);
 
         // Assert
-        Assert.Equal(__requestHeaders_allowed.Count, result.Count);
-        Assert.True(Helpers.AreHeaderDictionariesEqual(__requestHeaders_allowed, result));
+        foreach (var header in result)
+        {
+            if (__requestHeaders_ignored.ContainsKey(header.Key))
+                Assert.Equal(HeaderReplicationBusiness.RedactedValue, header.Value);
+            else
+                Assert.Equal(__requestHeaders_allowed[header.Key], header.Value);
+        }
     }
 
-    
 
-        // Add some combined headers. These header keys will be ignored because they contain IgnoredHeaderSentence even if they start with AllowedHeaderPrefix
-        // for (int i = 0; i < toBeAddedCombinedHeader; i++)
-        //     __requestHeaders_ignored.Add($"{Helpers.GetAllowedHeaderPrefix(mockConfig)}-{Helpers.GetIgnoredHeaderSentence(mockConfig)}-combined-{i}", GetRandomValue());
+
+    // Add some combined headers. These header keys will be ignored because they contain IgnoredHeaderSentence even if they start with AllowedHeaderPrefix
+    // for (int i = 0; i < toBeAddedCombinedHeader; i++)
+    //     __requestHeaders_ignored.Add($"{Helpers.GetAllowedHeaderPrefix(mockConfig)}-{Helpers.GetIgnoredHeaderSentence(mockConfig)}-combined-{i}", GetRandomValue());
     // [Fact]
     // public void Ctor_Should_ThrowArgumentNullException_WhenIgnoredSentencesIsNull()
     // {

@@ -60,7 +60,7 @@ public class HeaderReplicationBusiness
             bool isIgnored = _config.IgnoredHeaderSentences.Any(sentence => key.Contains(sentence, StringComparison.OrdinalIgnoreCase));
             if (isIgnored)
             {
-                value = RedactedValue;
+                replicatedHeaders[key] = RedactedValue;
                 continue;
             }
 
