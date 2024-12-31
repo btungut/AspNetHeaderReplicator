@@ -1,14 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Castle.Core.Logging;
+/// <summary>
+/// Represents the business unit tests for the <see cref="HeaderReplicationBusiness"/> class.
+/// </summary>
+
 using DotNetHeaderReplicator.Internals;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Primitives;
-using Moq;
-using Xunit;
 
 namespace DotNetHeaderReplicator.Tests;
 

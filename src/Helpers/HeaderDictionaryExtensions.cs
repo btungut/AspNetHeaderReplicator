@@ -1,3 +1,6 @@
+/// <summary>
+/// Represents extension methods for the <see cref="IHeaderDictionary"/> interface.
+/// </summary>
 using Microsoft.AspNetCore.Http;
 
 namespace DotNetHeaderReplicator;

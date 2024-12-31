@@ -1,7 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+/// <summary>
+/// Represents the business logic for the header replicator which constructed by the <see cref="HeaderReplicatorMiddleware"/> and used to replicate the headers.
+/// </summary>
+
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 

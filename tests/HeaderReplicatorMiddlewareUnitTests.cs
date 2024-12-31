@@ -1,3 +1,6 @@
+/// <summary>
+/// Represents the unit tests for the <see cref="HeaderReplicatorMiddleware"/> class only for ctor and InvokeAsync methods.
+/// </summary>
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Moq;

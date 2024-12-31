@@ -1,3 +1,6 @@
+/// <summary>
+/// Represents extension and helper methods for the tests.
+/// </summary>
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;

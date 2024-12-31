@@ -1,6 +1,9 @@
+/// <summary>
+/// Represents the extension methods for the <see cref="IServiceCollection"/> interface which are used to add <see cref="HeaderReplicatorMiddleware"/> in fluent way.
+/// </summary>
+/// 
 using DotNetHeaderReplicator;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
 
 namespace Microsoft.Extensions.DependencyInjection;
 

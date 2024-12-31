@@ -1,3 +1,6 @@
+/// <summary>
+/// Represents the configuration for the header replicator which is being created by the <see cref="HeaderReplicatorConfigurationBuilder"/> for the <see cref="HeaderReplicatorMiddleware"/>.
+/// </summary>
 namespace DotNetHeaderReplicator;
 
 public interface IHeaderReplicatorConfiguration

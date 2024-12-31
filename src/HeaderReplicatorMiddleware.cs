@@ -1,9 +1,13 @@
+﻿/// <summary>
+/// Represents the middleware that replicates headers from the request to the response.
+/// </summary>
 ﻿
-using DotNetHeaderReplicator;
+
 using DotNetHeaderReplicator.Internals;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
-namespace Microsoft.AspNetCore.Http;
+namespace DotNetHeaderReplicator;
 
 public class HeaderReplicatorMiddleware : IMiddleware
 {

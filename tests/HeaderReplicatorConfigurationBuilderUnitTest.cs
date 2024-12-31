@@ -1,3 +1,6 @@
+/// <summary>
+/// Represents the unit tests for the <see cref="HeaderReplicatorConfigurationBuilder"/> class.
+/// </summary>
 namespace DotNetHeaderReplicator.Tests;
 
 public class HeaderReplicatorConfigurationBuilderUnitTest
