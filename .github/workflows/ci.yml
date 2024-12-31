@@ -20,6 +20,8 @@ run-name: v${{ github.run_number }}-r${{ github.run_attempt }}
 
 jobs:
   build_and_test:
+    env:
+      RAW_COVERAGE_DIR: ./coverage
     name: build_and_test
     runs-on: ${{ vars.DEFAULT_RUNS_ON }}
 
@@ -31,21 +33,34 @@ jobs:
         with:
           gitToken: ${{ secrets.GITHUB_TOKEN }}
       
-      - shell: bash
+      - name: dotnet_restore_and_build
+        id: dotnet_restore_and_build
+        shell: bash
         run: |
-          echo "Current directory: $(pwd)"
+          set -euo pipefail
+          dotnet restore
+          dotnet build -c Release
+        working-directory: app
+
+        # run tests and publish cobertura report
+      - name: dotnet_test
+        id: dotnet_test
+        shell: bash
+        run: |
+          set -euo pipefail
+          dotnet test --collect:"XPlat Code Coverage" --results-directory ${RAW_COVERAGE_DIR} -c Release --no-build --no-restore --verbosity normal
+          cd ${RAW_COVERAGE_DIR}
           ls -al
-          cd app
-          ls -al
-          tree
+        working-directory: app/tests
 
-      - task: DotNetCoreCLI@2
-        inputs:
-          command: restore
-          working-directory: app
-          projects: "*.sln"
-        id: dotnet_restore
-
-
-      
-
+      - name: upload_coverage_report
+        id: upload_coverage_report
+        if: always()
+        uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          directory: ${{ env.RAW_COVERAGE_DIR }}
+          files: coverage.cobertura.xml
+          flags: unittests
+          name: codecov-umbrella
+          fail_ci_if_error: true
