@@ -66,8 +66,7 @@ jobs:
 
       - uses: danielpalme/ReportGenerator-GitHub-Action@5.4.3
         with:
-          reports: result.xml
-          targetdir: ${{ runner.temp }}
+          reports: ${{ runner.temp }}/result.xml
           reporttypes: "HtmlInline;Cobertura"
           toolpath: 'reportgeneratortool'
 
