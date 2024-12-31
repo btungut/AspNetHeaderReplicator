@@ -79,6 +79,12 @@ jobs:
           name: CoverageReport # Artifact name        
           path: ${{ runner.temp }}/coveragereport # Directory containing files to upload
 
+      - name: Convert issue body to markdown
+        uses: lowg6/action-html-to-markdown@v0.1.2
+        with:
+          html: ${{ runner.temp }}/coveragereport/MarkdownSummaryGithub.md
+          
+
       - name: Publish coverage in build summary
         run: |
           set -euo pipefail
