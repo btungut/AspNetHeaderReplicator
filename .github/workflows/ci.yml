@@ -20,8 +20,6 @@ run-name: v${{ github.run_number }}-r${{ github.run_attempt }}
 
 jobs:
   build_and_test:
-    env:
-      RAW_COVERAGE_DIR: ./coverage
     name: build_and_test
     runs-on: ${{ vars.DEFAULT_RUNS_ON }}
 
@@ -48,27 +46,29 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          dotnet test --collect:"XPlat Code Coverage" --results-directory ${RAW_COVERAGE_DIR} -c Release --no-build --no-restore --verbosity normal
+          rm -rf ./coverage*
+          dotnet test --collect:"XPlat Code Coverage" --results-directory ./coverage -c Release --no-build --no-restore --verbosity normal
         working-directory: app/tests
 
       - name: copy_coverage_files
+        shell: bash
         run: |
           set -euo pipefail
 
-          pushd app/tests/${RAW_COVERAGE_DIR}
-          find . -type f -name '*.xml' -exec cp {} ${TMP_DIR}/result.xml \; || { echo "No coverage file found"; exit 1; }
-          popd
-          
-          echo "list of files in ${TMP_DIR}"
-          ls -al ${TMP_DIR}
-        env:
-          TMP_DIR: ${{ runner.temp }}
+          # find *.xml file under app/tests/coverage directory, if not exist or exist more than one fail, else copy it to the root directory
+          coverage_files=$(find app/tests/coverage -name '*.xml')
+          if [ $(echo "$coverage_files" | wc -l) -ne 1 ]; then
+            echo "Coverage file not found or found more than one: $coverage_files"
+            exit 1
+          fi
+
+          cp $coverage_files result.xml
 
 
       - name: irongut_coverage
         uses: irongut/CodeCoverageSummary@v1.3.0
         with:
-          filename: ${{ runner.temp }}/result.xml
+          filename: result.xml
           badge: true
           fail_below_min: true
           format: markdown
