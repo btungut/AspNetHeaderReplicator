@@ -27,9 +27,9 @@ jobs:
       - uses: btungut/devops/.github/actions/common@master
         id: common
 
-      - uses: btungut/devops/.github/actions/git-checkout@master
-        with:
-          gitToken: ${{ secrets.GITHUB_TOKEN }}
+      # - uses: btungut/devops/.github/actions/git-checkout@master
+      #   with:
+      #     gitToken: ${{ secrets.GITHUB_TOKEN }}
 
       # - name: dotnet_restore
       #   uses: DotNetCoreCLI@2
