@@ -1,6 +1,7 @@
 name: feature CI
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - feature/*
@@ -30,12 +31,12 @@ jobs:
         with:
           gitToken: ${{ secrets.GITHUB_TOKEN }}
 
-      - task: DotNetCoreCLI@2
-        displayName: 'Restore solution'
-        inputs:
+      - uses: DotNetCoreCLI@2
+        with:
           command: 'restore'
           working-directory: 'app'
           projects: '*.sln'
+        id: dotnet_restore
 
 
       
