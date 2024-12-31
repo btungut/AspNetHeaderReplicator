@@ -1,0 +1,42 @@
+name: feature CI
+
+on:
+  push:
+    branches:
+      - feature/*
+    paths-ignore: 
+      - 'README'
+      - 'README.md'
+      - 'LICENSE'
+      - '.github/workflows/**'
+      - '.github/actions/**'
+      - 'Dockerfile'
+      - 'Dockerfile.*'
+      - 'docker-compose.yml'
+      - 'docker-compose.*.yml'
+
+run-name: v${{ github.run_number }}-r${{ github.run_attempt }}
+
+jobs:
+  build_and_test:
+    name: build_and_test
+    runs-on: ${{ vars.DEFAULT_RUNS_ON }}
+
+    steps:
+      - uses: btungut/devops/.github/actions/common@master
+        id: common
+
+      - uses: btungut/devops/.github/actions/git-checkout@master
+        with:
+          gitToken: ${{ secrets.GITHUB_TOKEN }}
+
+      - task: DotNetCoreCLI@2
+        displayName: 'Restore solution'
+        inputs:
+          command: 'restore'
+          working-directory: 'app'
+          projects: '*.sln'
+
+
+      
+
