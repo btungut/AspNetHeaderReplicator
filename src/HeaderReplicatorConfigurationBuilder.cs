@@ -41,10 +41,10 @@ public class HeaderReplicatorConfigurationBuilder
         return this;
     }
 
-    public HeaderReplicatorConfigurationBuilder AllowHeaderPrefixes(params string[] prefixes)
+    public HeaderReplicatorConfigurationBuilder AllowHeaderPrefixes(IEnumerable<string> prefixes)
     {
         if (prefixes == null) throw new ArgumentNullException(nameof(prefixes));
-        if (prefixes.Length == 0) throw new ArgumentException("The prefixes cannot be empty.", nameof(prefixes));
+        if (prefixes.Count() == 0) throw new ArgumentException("The prefixes cannot be empty.", nameof(prefixes));
 
         foreach (var prefix in prefixes)
             AllowHeaderPrefix(prefix);
@@ -63,10 +63,10 @@ public class HeaderReplicatorConfigurationBuilder
         return this;
     }
 
-    public HeaderReplicatorConfigurationBuilder IgnoreHeaderSentences(params string[] sentences)
+    public HeaderReplicatorConfigurationBuilder IgnoreHeaderSentences(IEnumerable<string> sentences)
     {
         if (sentences == null) throw new ArgumentNullException(nameof(sentences));
-        if (sentences.Length == 0) throw new ArgumentException("The sentences cannot be empty.", nameof(sentences));
+        if (sentences.Count() == 0) throw new ArgumentException("The sentences cannot be empty.", nameof(sentences));
 
         foreach (var sentence in sentences)
             IgnoreHeaderSentence(sentence);

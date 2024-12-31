@@ -8,8 +8,8 @@ namespace DotNetHeaderReplicator.Tests;
 internal static class Helpers
 {
     public static IEnumerable<string> GetEmptyEnumerable() => Enumerable.Empty<string>();
-    public static StringValues GetRandomValue() => new StringValues(Guid.NewGuid().ToString());
-    
+    public static string GetRandomValue() => new StringValues(Guid.NewGuid().ToString());
+
     public static IHeaderDictionary GetMergedHeaders(params IHeaderDictionary[] headers)
     {
         if(headers == null || headers.Length == 0)
@@ -28,6 +28,37 @@ internal static class Helpers
         }
 
         return result;
+    }
+
+    public static bool AreStringCollectionsEqualWithoutOrderAndCase(IEnumerable<string> expected, IEnumerable<string> actual)
+    {
+        if(expected == null || actual == null)
+            throw new ArgumentNullException("The expected and actual collections cannot be null.");
+
+        if(expected.Count() != actual.Count())
+            throw new ArgumentException("The expected and actual collections must have the same count.");
+
+        foreach (var item in expected)
+        {
+            if(!actual.Any(a => a.Equals(item, StringComparison.OrdinalIgnoreCase)))
+                throw new ArgumentException($"The item {item} does not exist in the actual collection.");
+        }
+
+        return true;
+    }
+
+    public static bool AreStringCollectionContainsWithoutOrderAndCase(IEnumerable<string> expected, IEnumerable<string> actual)
+    {
+        if(expected == null || actual == null)
+            throw new ArgumentNullException("The expected and actual collections cannot be null.");
+
+        foreach (var item in expected)
+        {
+            if(!actual.Any(a => a.Contains(item, StringComparison.OrdinalIgnoreCase)))
+                throw new ArgumentException($"The item {item} does not exist in the actual collection.");
+        }
+
+        return true;
     }
 
     public static bool AreHeaderDictionariesEqual(IHeaderDictionary expected, IHeaderDictionary actual)
