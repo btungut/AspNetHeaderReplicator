@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace DotNetHeaderReplicator;
 
+[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 internal static class HeaderDictionaryExtensions
 {
     internal static void AddOrReplaceRange(this IHeaderDictionary dic, IHeaderDictionary source)

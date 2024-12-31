@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
+[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 public static class HeaderReplicatorMiddlewareExtensions
 {
     public static IServiceCollection AddHeaderReplicator(this IServiceCollection services)
