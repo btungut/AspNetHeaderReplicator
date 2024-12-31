@@ -31,12 +31,12 @@ jobs:
         with:
           gitToken: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: dotnet_restore
-        uses: DotNetCoreCLI@2
-        with:
-          command: 'restore'
-          working-directory: 'app'
-          projects: '*.sln'
+      # - name: dotnet_restore
+      #   uses: DotNetCoreCLI@2
+      #   with:
+      #     command: 'restore'
+      #     working-directory: 'app'
+      #     projects: '*.sln'
 
 
       
