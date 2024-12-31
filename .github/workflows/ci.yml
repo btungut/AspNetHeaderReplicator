@@ -49,18 +49,37 @@ jobs:
         run: |
           set -euo pipefail
           dotnet test --collect:"XPlat Code Coverage" --results-directory ${RAW_COVERAGE_DIR} -c Release --no-build --no-restore --verbosity normal
-          cd ${RAW_COVERAGE_DIR}
-          ls -al
         working-directory: app/tests
 
-      - name: upload_coverage_report
-        id: upload_coverage_report
-        if: always()
-        uses: codecov/codecov-action@v2
+      - name: copy_coverage_files
+        run: |
+          set -euo pipefail
+
+          if [ -z "${TMP_DIR}" ]; then
+            echo "TMP_DIR is not set"
+            exit 1
+          fi
+
+          if [ ! -d "${TMP_DIR}" ]; then
+            echo "TMP_DIR is not exist"
+            exit 1
+          fi
+
+          pushd app/tests
+          cp ${RAW_COVERAGE_DIR}/**/*.xml ${TMP_DIR}/result.xml
+          echo "Copied coverage files to ${TMP_DIR}"
+          popd
+
+
+      - name: irongut_coverage
+        uses: irongut/CodeCoverageSummary@v1.3.0
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          directory: ${{ env.RAW_COVERAGE_DIR }}
-          files: coverage.cobertura.xml
-          flags: unittests
-          name: codecov-umbrella
-          fail_ci_if_error: true
+          filename: ${TMP_DIR}/result.xml
+          badge: true
+          fail_below_min: true
+          format: markdown
+          hide_branch_rate: false
+          hide_complexity: false
+          indicators: true
+          output: both
+          thresholds: '50 75'
