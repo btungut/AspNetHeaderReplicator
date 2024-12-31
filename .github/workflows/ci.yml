@@ -55,20 +55,14 @@ jobs:
         run: |
           set -euo pipefail
 
-          if [ -z "${TMP_DIR}" ]; then
-            echo "TMP_DIR is not set"
-            exit 1
-          fi
-
-          if [ ! -d "${TMP_DIR}" ]; then
-            echo "TMP_DIR is not exist"
-            exit 1
-          fi
-
-          pushd app/tests
-          cp ${RAW_COVERAGE_DIR}/**/*.xml ${TMP_DIR}/result.xml
-          echo "Copied coverage files to ${TMP_DIR}"
+          pushd app/tests/${RAW_COVERAGE_DIR}
+          find . -type f -name '*.xml' -exec cp {} ${TMP_DIR}/result.xml \; || { echo "No coverage file found"; exit 1; }
           popd
+          
+          echo "list of files in ${TMP_DIR}"
+          ls -al ${TMP_DIR}
+        env:
+          TMP_DIR: ${{ runner.temp }}
 
 
       - name: irongut_coverage
