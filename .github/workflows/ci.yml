@@ -68,7 +68,7 @@ jobs:
       - name: irongut_coverage
         uses: irongut/CodeCoverageSummary@v1.3.0
         with:
-          filename: ${TMP_DIR}/result.xml
+          filename: ${{ runner.temp }}/result.xml
           badge: true
           fail_below_min: true
           format: markdown
