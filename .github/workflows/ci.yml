@@ -67,27 +67,36 @@ jobs:
       - uses: danielpalme/ReportGenerator-GitHub-Action@5.4.3
         with:
           reports: ${{ runner.temp }}/result.xml
-          reporttypes: "Html;MarkdownSummary;Cobertura"
+          reporttypes: "Html;MarkdownSummaryGithub;Cobertura"
           toolpath: 'reportgeneratortool'
-          targetdir: coveragereport
+          targetdir: ${{ runner.temp }}/coveragereport
           tag: ${{ runner.name }}
-
-      - shell: bash
-        run: |
-          set -euo pipefail
-          tree coveragereport
           
 
       - name: Upload coverage report artifact
         uses: actions/upload-artifact@v4
         with:
           name: CoverageReport # Artifact name        
-          path: coveragereport # Directory containing files to upload
+          path: ${{ runner.temp }}/coveragereport # Directory containing files to upload
 
-      - name: Publish coverage in build summary # Only applicable if 'MarkdownSummaryGithub' or one of the other Markdown report types is generated
+      - name: Publish coverage in build summary
         run: |
-          cat coveragereport/*.md >> $GITHUB_STEP_SUMMARY # Adjust path and filename if necessary
+          set -euo pipefail
+          ls -al
+          # find md file, if not exist or exist more than one fail, else get the path
+          md_files=$(find ${{ runner.temp }}/coveragereport -name '*.md')
+          if [ $(echo "$md_files" | wc -l) -ne 1 ]; then
+            echo "Markdown file not found or found more than one: $md_files"
+            exit 1
+          fi
+          
+          echo "### REPORT : $md_files"
+          cat $md_files
+          echo "### REPORT END"
+
+          cat $md_files >> $GITHUB_STEP_SUMMARY
         shell: bash
+        working-directory: ${{ runner.temp }}/coveragereport
 
       # - name: irongut_coverage
       #   uses: irongut/CodeCoverageSummary@v1.3.0
