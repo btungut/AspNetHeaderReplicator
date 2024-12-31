@@ -79,10 +79,26 @@ jobs:
           name: CoverageReport # Artifact name        
           path: ${{ runner.temp }}/coveragereport # Directory containing files to upload
 
+      - shell: bash
+        run: |
+          set -euo pipefail
+
+          html_path="${{ runner.temp }}/coveragereport/index.html"
+          [ -f "$html_path" ] || { echo "File not found: $html_path"; exit 1; }
+          echo "html_path is found : $html_path"
+
+          content_of_index_html=$(cat ${{ runner.temp }}/coveragereport/index.html)
+          echo "::set-output name=content_of_index_html::$content_of_index_html"
+        id: html_report
+
+
+        working-directory: ${{ runner.temp }}/coveragereport
+
       - name: Convert issue body to markdown
         uses: lowg6/action-html-to-markdown@v0.1.2
         with:
-          html: ${{ runner.temp }}/coveragereport/MarkdownSummaryGithub.md
+          text: ${{ steps.html_report.outputs.content_of_index_html }}
+        id: html_to_markdown
           
 
       - name: Publish coverage in build summary
@@ -100,7 +116,10 @@ jobs:
           cat $md_files
           echo "### REPORT END"
 
+          echo ${{ steps.html_to_markdown.outputs.markdown-text }} >> $md_files
+
           cat $md_files >> $GITHUB_STEP_SUMMARY
+          
         shell: bash
         working-directory: ${{ runner.temp }}/coveragereport
 
