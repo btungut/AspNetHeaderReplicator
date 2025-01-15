@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace DotNetHeaderReplicator.Internals;
 
-public class HeaderReplicationBusiness
+internal class HeaderReplicationBusiness
 {
     public const string RedactedValue = $"REDACTED_By_{nameof(HeaderReplicationBusiness)}";
 
@@ -57,10 +57,26 @@ public class HeaderReplicationBusiness
             var key = header.Key;
             var value = header.Value;
 
+
+            bool isIgnoredAlready = HeaderReplicationCache.Instance.IsIgnoredHeader(key);
+            if (isIgnoredAlready)
+            {
+                replicatedHeaders[key] = RedactedValue;
+                continue;
+            }
+
             bool isIgnored = _config.IgnoredHeaderSentences.Any(sentence => key.Contains(sentence, StringComparison.OrdinalIgnoreCase));
             if (isIgnored)
             {
                 replicatedHeaders[key] = RedactedValue;
+                HeaderReplicationCache.Instance.AddIgnoredHeader(key);
+                continue;
+            }
+
+            bool isAllowedAlready = HeaderReplicationCache.Instance.IsAllowedHeader(key);
+            if (isAllowedAlready)
+            {
+                replicatedHeaders[key] = value;
                 continue;
             }
 
@@ -70,6 +86,7 @@ public class HeaderReplicationBusiness
             if (isKeyPrefixAllowed)
             {
                 replicatedHeaders[key] = value;
+                HeaderReplicationCache.Instance.AddAllowedHeader(key);
                 continue;
             }
 
