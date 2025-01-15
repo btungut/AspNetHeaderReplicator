@@ -40,7 +40,6 @@ jobs:
           dotnet build -c Release
         working-directory: app
 
-        # run tests and publish cobertura report
       - name: dotnet_test
         id: dotnet_test
         shell: bash
@@ -48,6 +47,16 @@ jobs:
           set -euo pipefail
           rm -rf ./coverage*
           dotnet test --collect:"XPlat Code Coverage" --results-directory ./coverage -c Release --no-build --no-restore --verbosity normal
+          
+          # find *.xml file abs path which under ./coverage directory, if not exist echo and exit
+          coverage_files=$(find ./coverage -name '*.xml')
+          if [ $(echo "$coverage_files" | wc -l) -ne 1 ]; then
+            echo "Coverage file not found or found more than one: $coverage_files"
+            exit 1
+          fi
+          
+          # add env var for coverage file path
+          echo "##[set-output name=coverage_file_path;]$coverage_files"
         working-directory: app/tests
 
       - name: copy_coverage_files
@@ -70,49 +79,10 @@ jobs:
           reporttypes: "Html;MarkdownSummaryGithub;Cobertura"
           toolpath: 'reportgeneratortool'
           targetdir: ${{ runner.temp }}/coveragereport
-          tag: ${{ runner.name }}
-          
 
       - name: Upload coverage report artifact
         uses: actions/upload-artifact@v4
         with:
           name: CoverageReport # Artifact name        
           path: ${{ runner.temp }}/coveragereport # Directory containing files to upload
-
-      - name: Convert issue body to markdown
-        uses: lowg6/action-html-to-markdown@v0.1.2
-        with:
-          html: ${{ runner.temp }}/coveragereport/MarkdownSummaryGithub.md
-          
-
-      - name: Publish coverage in build summary
-        run: |
-          set -euo pipefail
-          ls -al
-          # find md file, if not exist or exist more than one fail, else get the path
-          md_files=$(find ${{ runner.temp }}/coveragereport -name '*.md')
-          if [ $(echo "$md_files" | wc -l) -ne 1 ]; then
-            echo "Markdown file not found or found more than one: $md_files"
-            exit 1
-          fi
-          
-          echo "### REPORT : $md_files"
-          cat $md_files
-          echo "### REPORT END"
-
-          cat $md_files >> $GITHUB_STEP_SUMMARY
-        shell: bash
-        working-directory: ${{ runner.temp }}/coveragereport
-
-      # - name: irongut_coverage
-      #   uses: irongut/CodeCoverageSummary@v1.3.0
-      #   with:
-      #     filename: result.xml
-      #     badge: true
-      #     fail_below_min: true
-      #     format: markdown
-      #     hide_branch_rate: false
-      #     hide_complexity: false
-      #     indicators: true
-      #     output: both
-      #     thresholds: '50 75'
+        
