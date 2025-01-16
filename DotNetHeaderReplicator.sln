@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNetHeaderReplicator", "s
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNetHeaderReplicator.Tests", "tests\DotNetHeaderReplicator.Tests.csproj", "{ADAD202F-9040-49A2-BD80-AFE79C11B16D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNetHeaderReplicator.IntegrationTests", "tests_integration\DotNetHeaderReplicator.IntegrationTests.csproj", "{55F6C8A5-2026-42E3-B747-E7F08C4FFF8F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{ADAD202F-9040-49A2-BD80-AFE79C11B16D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ADAD202F-9040-49A2-BD80-AFE79C11B16D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ADAD202F-9040-49A2-BD80-AFE79C11B16D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{55F6C8A5-2026-42E3-B747-E7F08C4FFF8F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55F6C8A5-2026-42E3-B747-E7F08C4FFF8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55F6C8A5-2026-42E3-B747-E7F08C4FFF8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55F6C8A5-2026-42E3-B747-E7F08C4FFF8F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

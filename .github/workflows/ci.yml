@@ -76,14 +76,6 @@ jobs:
           toolpath: 'reportgeneratortool'
           targetdir: ${{ runner.temp }}/coveragereport
           tag: ${{ runner.name }}
-
-
-      - name: check_it
-        shell: bash
-        run: |
-          set -euo pipefail
-          ls -al
-        working-directory: ${{ runner.temp }}/coveragereport
           
 
       - name: Upload coverage report artifact
@@ -111,3 +103,13 @@ jobs:
           cat $md_files >> $GITHUB_STEP_SUMMARY
         shell: bash
         working-directory: ${{ runner.temp }}/coveragereport
+        
+
+        # run integration tests
+      - name: dotnet_integration_test
+        id: dotnet_integration_test
+        shell: bash
+        run: |
+          set -euo pipefail
+          dotnet test -c Release --no-build --no-restore --verbosity normal
+        working-directory: app/tests_integration
