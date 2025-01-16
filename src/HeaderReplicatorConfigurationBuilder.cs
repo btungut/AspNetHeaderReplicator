@@ -107,7 +107,7 @@ public class HeaderReplicatorConfigurationBuilder
         return this;
     }
 
-    public IHeaderReplicatorConfiguration Build()
+    internal IHeaderReplicatorConfiguration Build()
     {
         Func<bool> isBuilt = () => _builtConfiguration != null;
         Action throwIfBuilt = () =>
