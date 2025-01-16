@@ -12,16 +12,16 @@ internal class HeaderReplicationBusiness
     public const string RedactedValue = $"REDACTED_By_{nameof(HeaderReplicationBusiness)}";
 
     private readonly IHeaderReplicatorConfiguration _config;
-    private readonly ILogger<HeaderReplicationBusiness> _logger;
+    private readonly ILogger _logger;
 
-    internal HeaderReplicationBusiness(IHeaderReplicatorConfiguration config, ILogger<HeaderReplicationBusiness> logger)
+    internal HeaderReplicationBusiness(IHeaderReplicatorConfiguration config, ILogger logger = null)
     {
         _config = config ?? throw new ArgumentNullException(nameof(config));
         if(_config.IgnoredHeaderSentences == null) throw new ArgumentNullException(nameof(config.IgnoredHeaderSentences));
         if(_config.AllowedHeaderPrefixes == null) throw new ArgumentNullException(nameof(config.AllowedHeaderPrefixes));
 
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        _logger.LogDebug("HeaderReplicationBusiness instance created with config {@config}", config);
+        _logger = logger;
+        _logger?.LogDebug("HeaderReplicationBusiness instance created with config {@config}", config);
     }
 
     internal IHeaderDictionary GetReplicatedHeaders(IHeaderDictionary requestHeaders)
@@ -38,7 +38,7 @@ internal class HeaderReplicationBusiness
         if (_config.AllowAll)
         {
             replicatedHeaders.AddOrReplaceRange(requestHeaders);
-            _logger.LogDebug("AllowAll is true. All headers will be replicated {@logCtx}", new
+            _logger?.LogDebug("AllowAll is true. All headers will be replicated {@logCtx}", new
             {
                 sourceHeaders = requestHeaders,
                 replicatedHeaders = replicatedHeaders,
@@ -47,7 +47,7 @@ internal class HeaderReplicationBusiness
             return replicatedHeaders;
         }
 
-        _logger.LogDebug("AllowAll is false. Only the headers that match the allowed prefixes and also do not contain the ignored sentences will be replicated {@config}", _config);
+        _logger?.LogDebug("AllowAll is false. Only the headers that match the allowed prefixes and also do not contain the ignored sentences will be replicated {@config}", _config);
 
         // Iterate over each header in the request headers.
         foreach (var header in requestHeaders)
@@ -70,6 +70,7 @@ internal class HeaderReplicationBusiness
             {
                 replicatedHeaders[key] = RedactedValue;
                 HeaderReplicationCache.Instance.AddIgnoredHeader(key);
+                _logger?.LogDebug("The header key is cached as ignored {@key}", key);
                 continue;
             }
 
@@ -82,18 +83,15 @@ internal class HeaderReplicationBusiness
 
             var keyPrefix = GetHeaderKeyPrefix(key);
             var isKeyPrefixAllowed = _config.AllowedHeaderPrefixes.Contains(keyPrefix, StringComparer.OrdinalIgnoreCase);
-
             if (isKeyPrefixAllowed)
             {
                 replicatedHeaders[key] = value;
                 HeaderReplicationCache.Instance.AddAllowedHeader(key);
+                _logger?.LogDebug("The header key is cached as allowed {@key}", key);
                 continue;
             }
 
-            throw new InvalidOperationException($"The request header key '{key}' with '{value}' is not determined to be replicated. " +
-                $"The key prefix '{keyPrefix}' is not allowed. " +
-                $"The allowed prefixes are '{string.Join(", ", _config.AllowedHeaderPrefixes)}'. " +
-                $"The ignored sentences are '{string.Join(", ", _config.IgnoredHeaderSentences)}'.");
+            _logger?.LogDebug("The header key is skipped {@key}", key);
         }
 
         return replicatedHeaders;

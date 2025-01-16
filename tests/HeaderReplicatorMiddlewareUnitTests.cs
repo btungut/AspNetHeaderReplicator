@@ -14,24 +14,9 @@ public class HeaderReplicatorMiddlewareUnitTests
     {
         // Arrange
         IHeaderReplicatorConfiguration config = null;
-        LoggerFactory loggerFactory = new Mock<LoggerFactory>().Object;
 
         // Act
-        Action act = () => new HeaderReplicatorMiddleware(config, loggerFactory);
-
-        // Assert
-        Assert.Throws<ArgumentNullException>(act);
-    }
-
-    [Fact]
-    public void Ctor_ShouldThrowException_WhenLoggerFactoryIsNull()
-    {
-        // Arrange
-        IHeaderReplicatorConfiguration config = new HeaderReplicatorConfiguration(true, new HashSet<string>(), new HashSet<string>());
-        LoggerFactory loggerFactory = null;
-
-        // Act
-        Action act = () => new HeaderReplicatorMiddleware(config, loggerFactory);
+        Action act = () => new HeaderReplicatorMiddleware(config);
 
         // Assert
         Assert.Throws<ArgumentNullException>(act);
@@ -42,8 +27,7 @@ public class HeaderReplicatorMiddlewareUnitTests
     {
         // Arrange
         IHeaderReplicatorConfiguration config = new HeaderReplicatorConfiguration(true, new HashSet<string>(), new HashSet<string>());
-        LoggerFactory loggerFactory = new Mock<LoggerFactory>().Object;
-        HeaderReplicatorMiddleware middleware = new HeaderReplicatorMiddleware(config, loggerFactory);
+        HeaderReplicatorMiddleware middleware = new HeaderReplicatorMiddleware(config);
         HttpContext context = null;
         RequestDelegate next = (_) => Task.CompletedTask;
 
@@ -59,8 +43,7 @@ public class HeaderReplicatorMiddlewareUnitTests
     {
         // Arrange
         IHeaderReplicatorConfiguration config = new HeaderReplicatorConfiguration(true, new HashSet<string>(), new HashSet<string>());
-        LoggerFactory loggerFactory = new Mock<LoggerFactory>().Object;
-        HeaderReplicatorMiddleware middleware = new HeaderReplicatorMiddleware(config, loggerFactory);
+        HeaderReplicatorMiddleware middleware = new HeaderReplicatorMiddleware(config);
         HttpContext context = new DefaultHttpContext();
         RequestDelegate next = null;
 

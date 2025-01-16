@@ -51,19 +51,6 @@ public class HeaderReplicationBusinessUnitTests
     }
 
     [Fact]
-    public void Ctor_ShouldThrowException_WhenLoggerIsNull()
-    {
-        // Arrange
-        var mockConfig = Mocked.GetHeaderReplicatorConfiguration(false, Helpers.GetEmptyEnumerable(), Helpers.GetEmptyEnumerable());
-
-        // Act
-        Action act = () => new HeaderReplicationBusiness(mockConfig, null);
-
-        // Assert
-        Assert.Throws<ArgumentNullException>(act);
-    }
-
-    [Fact]
     public void GetReplicatedHeaders_ShouldThrowException_WhenRequestHeadersIsNull()
     {
         // Arrange

@@ -12,12 +12,12 @@ namespace DotNetHeaderReplicator;
 public class HeaderReplicatorMiddleware : IMiddleware
 {
     private readonly IHeaderReplicatorConfiguration _config;
-    private readonly LoggerFactory _loggerFactory;
+    private readonly ILogger _logger;
 
-    public HeaderReplicatorMiddleware(IHeaderReplicatorConfiguration config, LoggerFactory loggerFactory)
+    public HeaderReplicatorMiddleware(IHeaderReplicatorConfiguration config, ILogger<HeaderReplicatorMiddleware> logger = null)
     {
         _config = config ?? throw new ArgumentNullException(nameof(config));
-        _loggerFactory = loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory));
+        _logger = logger;
     }
 
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
@@ -25,7 +25,7 @@ public class HeaderReplicatorMiddleware : IMiddleware
         if (context == null) throw new ArgumentNullException(nameof(context));
         if (next == null) throw new ArgumentNullException(nameof(next));
 
-        var business = new HeaderReplicationBusiness(_config, _loggerFactory.CreateLogger<HeaderReplicationBusiness>());
+        var business = new HeaderReplicationBusiness(_config, _logger);
 
         // Add the replicated headers from request to the response when the response is starting.
         context.Response.OnStarting(() =>
