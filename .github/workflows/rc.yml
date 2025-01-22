@@ -12,7 +12,7 @@ on:
       - '.github/**'
 
 # run-name: ${{ github.env.ABC }}-v${{ github.run_number }}-r${{ github.run_attempt }}
-# run-name: ${{ github.ref_name }}-rc${{ github.run_number }}-r${{ github.run_attempt }}
+run-name: ${{ github.ref_name }} '|' ${{ format('{0:0>2}', github.run_number) }} '-' ${{ format('{0:0>2}', github.run_attempt) }}
 
 jobs:
   build_and_test:
@@ -33,16 +33,13 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          echo "abc = ${{ steps.common.outputs.rev-unique }}"
-          echo "ver = ${{ steps.common.outputs.branch-version }}"
-          printenv
-          exit 1
 
           BRANCH_VERSION="${{ steps.common.outputs.branch-version }}"
           if [ -z "$BRANCH_VERSION" ]; then
               echo "steps.common.outputs.branch-version is null or empty whitespace!"
               exit 1
           fi
+          echo -e "\nsteps.common.outputs.branch-version = $BRANCH_VERSION\n"
 
 
 
