@@ -9,10 +9,10 @@ on:
       - 'README'
       - 'README.md'
       - 'LICENSE'
-      - '.github/**'
+      # - '.github/**'
 
 # run-name: ${{ github.env.ABC }}-v${{ github.run_number }}-r${{ github.run_attempt }}
-run-name: ${{ github.ref_name }} '|' ${{ format('{0:0>2}', github.run_number) }} '-' ${{ format('{0:0>2}', github.run_attempt) }}
+run-name: ${{ github.ref_name }} ${{ format('{0:0>2}', github.run_number) }} ${{ format('{0:0>2}', github.run_attempt) }}
 
 jobs:
   build_and_test:
