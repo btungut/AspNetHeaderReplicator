@@ -11,7 +11,8 @@ on:
       - 'LICENSE'
       - '.github/**'
 
-run-name: v${{ github.run_number }}-r${{ github.run_attempt }}
+# run-name: ${{ github.env.ABC }}-v${{ github.run_number }}-r${{ github.run_attempt }}
+# run-name: ${{ github.ref_name }}-rc${{ github.run_number }}-r${{ github.run_attempt }}
 
 jobs:
   build_and_test:
@@ -36,14 +37,14 @@ jobs:
           echo "ver = ${{ steps.common.outputs.branch-version }}"
           printenv
           exit 1
-          
-          BRANCH_POSTFIX=$(echo "${{ github.ref }}" | sed -E 's|(.+)/v?(.+)|\2|')
-          if ! [[ "$BRANCH_POSTFIX" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-              echo "Invalid format: $BRANCH_POSTFIX"
+
+          BRANCH_VERSION="${{ steps.common.outputs.branch-version }}"
+          if [ -z "$BRANCH_VERSION" ]; then
+              echo "steps.common.outputs.branch-version is null or empty whitespace!"
               exit 1
           fi
-          echo "branch-version=$BRANCH_POSTFIX" >> $GITHUB_OUTPUT
-          echo "branch-version=$BRANCH_POSTFIX"
+
+
 
       
 
