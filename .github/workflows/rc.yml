@@ -65,7 +65,8 @@ jobs:
           mkdir -p $OUTPUT_DIR
           
           PACKAGE_VERSION="${{ steps.common.outputs.branch-version }}-rc${{ steps.common.outputs.rev-unique }}"
-          echo -e "\nPACKAGE_VERSION = $PACKAGE_VERSION\n"
+          echo "PACKAGE_VERSION=$PACKAGE_VERSION" >> $GITHUB_ENV
+          echo "PACKAGE_VERSION=$PACKAGE_VERSION"
 
           dotnet pack \
             -c Release \
@@ -84,6 +85,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           path: ${{ env.OUTPUT_DIR }}
-          name: nuget
+          name: NuGet-${{ env.PACKAGE_VERSION }}
           if-no-files-found: error
           include-hidden-files: true
