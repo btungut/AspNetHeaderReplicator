@@ -32,11 +32,18 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          
+          echo "abc = ${{ steps.common.outputs.rev-unique }}"
+          echo "ver = ${{ steps.common.outputs.branch-version }}"
           printenv
-          BRANCH_POSTFIX=$(echo "${{ github.ref }}" | sed -E 's|(.+)/v?(.+)|\2|')
-          echo "BRANCH_POSTFIX: $BRANCH_POSTFIX"
           exit 1
+          
+          BRANCH_POSTFIX=$(echo "${{ github.ref }}" | sed -E 's|(.+)/v?(.+)|\2|')
+          if ! [[ "$BRANCH_POSTFIX" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+              echo "Invalid format: $BRANCH_POSTFIX"
+              exit 1
+          fi
+          echo "branch-version=$BRANCH_POSTFIX" >> $GITHUB_OUTPUT
+          echo "branch-version=$BRANCH_POSTFIX"
 
       
 
