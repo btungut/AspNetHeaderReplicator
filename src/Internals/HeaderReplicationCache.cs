@@ -1,4 +1,4 @@
-namespace DotNetHeaderReplicator.Internals;
+namespace AspNetHeaderReplicator.Internals;
 
 internal class HeaderReplicationCache
 {

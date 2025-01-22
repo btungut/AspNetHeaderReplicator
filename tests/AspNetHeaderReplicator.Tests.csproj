@@ -7,7 +7,7 @@
 
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
-    <AssemblyName>DotNetHeaderReplicator.Tests</AssemblyName>
+    <AssemblyName>AspNetHeaderReplicator.Tests</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
@@ -30,7 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\DotNetHeaderReplicator.csproj" />
+    <ProjectReference Include="..\src\AspNetHeaderReplicator.csproj" />
   </ItemGroup>
 
 

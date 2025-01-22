@@ -3,11 +3,11 @@
 /// </summary>
 ﻿
 
-using DotNetHeaderReplicator.Internals;
+using AspNetHeaderReplicator.Internals;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
-namespace DotNetHeaderReplicator;
+namespace AspNetHeaderReplicator;
 
 public class HeaderReplicatorMiddleware : IMiddleware
 {

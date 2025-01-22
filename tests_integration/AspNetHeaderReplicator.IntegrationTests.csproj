@@ -8,7 +8,7 @@
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
     <PreserveCompilationContext>true</PreserveCompilationContext>
-    <AssemblyName>DotNetHeaderReplicator.IntegrationTests</AssemblyName>
+    <AssemblyName>AspNetHeaderReplicator.IntegrationTests</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
@@ -28,7 +28,7 @@
 
 
   <ItemGroup>
-    <ProjectReference Include="..\src\DotNetHeaderReplicator.csproj" />
+    <ProjectReference Include="..\src\AspNetHeaderReplicator.csproj" />
   </ItemGroup>
 
 

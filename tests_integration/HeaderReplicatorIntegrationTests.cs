@@ -1,6 +1,6 @@
 using Xunit;
 
-namespace DotNetHeaderReplicator.IntegrationTests;
+namespace AspNetHeaderReplicator.IntegrationTests;
 
 public class HeaderReplicatorIntegrationTests
 {

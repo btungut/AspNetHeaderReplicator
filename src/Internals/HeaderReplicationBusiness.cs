@@ -5,7 +5,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
-namespace DotNetHeaderReplicator.Internals;
+namespace AspNetHeaderReplicator.Internals;
 
 internal class HeaderReplicationBusiness
 {

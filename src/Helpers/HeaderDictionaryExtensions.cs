@@ -3,7 +3,7 @@
 /// </summary>
 using Microsoft.AspNetCore.Http;
 
-namespace DotNetHeaderReplicator;
+namespace AspNetHeaderReplicator;
 
 [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 internal static class HeaderDictionaryExtensions
