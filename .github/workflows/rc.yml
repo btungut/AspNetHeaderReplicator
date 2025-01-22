@@ -17,7 +17,6 @@ jobs:
   build_and_test:
     name: build_and_test
     runs-on: ${{ vars.DEFAULT_RUNS_ON }}
-    env:
       
 
     steps:
