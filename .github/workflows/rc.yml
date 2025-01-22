@@ -17,6 +17,8 @@ jobs:
   build_and_test:
     name: build_and_test
     runs-on: ${{ vars.DEFAULT_RUNS_ON }}
+    env:
+      DOTNET_NUGET_DIR: ${{ github.env.RUNNER_TEMP }}/.nuget
       
 
     steps:
@@ -49,3 +51,26 @@ jobs:
           dir-unit-tests: app/tests
           dir-integration-tests: app/tests_integration
       
+      - name: dotnet_pack
+        id: dotnet_pack
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "PWD = $(pwd)"
+
+          rm -rf ${{ env.DOTNET_NUGET_DIR }}
+          mkdir -p ${{ env.DOTNET_NUGET_DIR }}
+          PACKAGE_VERSION="${{ steps.common.outputs.branch-version }}-rc${{ steps.common.outputs.rev-unique }}"
+
+          dotnet pack \
+            -c Release \
+            --verbosity detailed \
+            --no-build \
+            --no-restore \
+            -p:PackageVersion="$PACKAGE_VERSION" \
+            --output ${{ env.DOTNET_NUGET_DIR }}
+
+          echo -e "\n\nls for ${{ env.DOTNET_NUGET_DIR }}\n"
+          ls -al ${{ env.DOTNET_NUGET_DIR }}
+
+        working-directory: app/src
