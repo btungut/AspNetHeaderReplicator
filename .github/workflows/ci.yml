@@ -9,12 +9,7 @@ on:
       - 'README'
       - 'README.md'
       - 'LICENSE'
-      - '.github/workflows/**'
-      - '.github/actions/**'
-      - 'Dockerfile'
-      - 'Dockerfile.*'
-      - 'docker-compose.yml'
-      - 'docker-compose.*.yml'
+      - '.github/**'
 
 run-name: v${{ github.run_number }}-r${{ github.run_attempt }}
 
