@@ -13,10 +13,13 @@ on:
 
 run-name: ${{ github.ref_name }} - ${{ github.sha }}
 
+
 jobs:
   build_and_test:
     name: build_and_test
     runs-on: ${{ vars.DEFAULT_RUNS_ON }}
+    env:
+      DOTNET_VERBOSITY: minimal
       
     steps:
       - uses: btungut/devops/.github/actions/common@master
@@ -64,7 +67,7 @@ jobs:
 
           dotnet pack \
             -c Release \
-            --verbosity detailed \
+            --verbosity $DOTNET_VERBOSITY \
             --no-build \
             --no-restore \
             -p:PackageVersion="$PACKAGE_VERSION" \
