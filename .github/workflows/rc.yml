@@ -41,7 +41,7 @@ jobs:
           echo -e "\nsteps.common.outputs.branch-version = $BRANCH_VERSION\n"
 
 
-      - uses: ./.github/actions/dotnet-common@master
+      - uses: ./.github/actions/dotnet-common
         with:
           dir-sln: app
           dir-src-project: app/src
