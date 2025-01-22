@@ -17,10 +17,7 @@ jobs:
   build_and_test:
     name: build_and_test
     runs-on: ${{ vars.DEFAULT_RUNS_ON }}
-    env:
-      DOTNET_NUGET_DIR: ${{ github.env.RUNNER_TEMP }}/.nuget
       
-
     steps:
       - uses: btungut/devops/.github/actions/common@master
         id: common
@@ -58,9 +55,12 @@ jobs:
           set -euo pipefail
           echo "PWD = $(pwd)"
 
-          rm -rf ${{ env.DOTNET_NUGET_DIR }}
-          mkdir -p ${{ env.DOTNET_NUGET_DIR }}
+          OUTPUT_DIR="${{ runner.temp }}/.nuget"
+          rm -rf $OUTPUT_DIR
+          mkdir -p $OUTPUT_DIR
+          
           PACKAGE_VERSION="${{ steps.common.outputs.branch-version }}-rc${{ steps.common.outputs.rev-unique }}"
+          echo -e "\nPACKAGE_VERSION = $PACKAGE_VERSION\n"
 
           dotnet pack \
             -c Release \
@@ -68,9 +68,9 @@ jobs:
             --no-build \
             --no-restore \
             -p:PackageVersion="$PACKAGE_VERSION" \
-            --output ${{ env.DOTNET_NUGET_DIR }}
+            --output $OUTPUT_DIR
 
-          echo -e "\n\nls for ${{ env.DOTNET_NUGET_DIR }}\n"
-          ls -al ${{ env.DOTNET_NUGET_DIR }}
+          echo -e "\n\nls for $OUTPUT_DIR\n"
+          ls -al $OUTPUT_DIR
 
         working-directory: app/src
