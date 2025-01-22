@@ -106,4 +106,4 @@ runs:
         set -euo pipefail
         dotnet test -c Release --no-build --no-restore --verbosity normal
       working-directory: ${{ inputs.dir-integration-tests }}
-      if: ${{ inputs.dir-integration-tests && ne(inputs.dir-integration-tests, '') }}
+      if: ${{ success() && (inputs.dir-integration-tests != '') }}
