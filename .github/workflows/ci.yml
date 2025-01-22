@@ -26,85 +26,11 @@ jobs:
       - uses: btungut/devops/.github/actions/git-checkout@master
         with:
           gitToken: ${{ secrets.GITHUB_TOKEN }}
+
       
-
-      - name: dotnet_restore_and_build
-        id: dotnet_restore_and_build
-        shell: bash
-        run: |
-          set -euo pipefail
-          dotnet restore
-          dotnet build -c Release
-        working-directory: app
-
-
-        # run tests and publish cobertura report
-      - name: dotnet_test
-        id: dotnet_test
-        shell: bash
-        run: |
-          set -euo pipefail
-          rm -rf ./coverage*
-          dotnet test --collect:"XPlat Code Coverage" --results-directory ./coverage -c Release --no-build --no-restore --verbosity normal
-        working-directory: app/tests
-
-
-      - name: copy_coverage_files
-        shell: bash
-        run: |
-          set -euo pipefail
-
-          # find *.xml file under app/tests/coverage directory, if not exist or exist more than one fail, else copy it to the root directory
-          coverage_files=$(find app/tests/coverage -name '*.xml')
-          if [ $(echo "$coverage_files" | wc -l) -ne 1 ]; then
-            echo "Coverage file not found or found more than one: $coverage_files"
-            exit 1
-          fi
-
-          cp $coverage_files ${{ runner.temp }}/result.xml
-
-
-      - uses: danielpalme/ReportGenerator-GitHub-Action@5.4.3
+      - uses: ./app/.github/actions/dotnet-common
         with:
-          reports: ${{ runner.temp }}/result.xml
-          reporttypes: "Html;MarkdownSummaryGithub;Cobertura"
-          toolpath: 'reportgeneratortool'
-          targetdir: ${{ runner.temp }}/coveragereport
-          tag: ${{ runner.name }}
-          
-
-      - name: Upload coverage report artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: CoverageReport # Artifact name        
-          path: ${{ runner.temp }}/coveragereport # Directory containing files to upload         
-
-
-      - name: Publish coverage in build summary
-        run: |
-          set -euo pipefail
-          ls -al
-          # find md file, if not exist or exist more than one fail, else get the path
-          md_files=$(find ${{ runner.temp }}/coveragereport -name '*.md')
-          if [ $(echo "$md_files" | wc -l) -ne 1 ]; then
-            echo "Markdown file not found or found more than one: $md_files"
-            exit 1
-          fi
-          
-          echo "### REPORT : $md_files"
-          cat $md_files
-          echo "### REPORT END"
-
-          cat $md_files >> $GITHUB_STEP_SUMMARY
-        shell: bash
-        working-directory: ${{ runner.temp }}/coveragereport
-        
-
-        # run integration tests
-      - name: dotnet_integration_test
-        id: dotnet_integration_test
-        shell: bash
-        run: |
-          set -euo pipefail
-          dotnet test -c Release --no-build --no-restore --verbosity normal
-        working-directory: app/tests_integration
+          dir-sln: app
+          dir-src-project: app/src
+          dir-unit-tests: app/tests
+          dir-integration-tests: app/tests_integration
