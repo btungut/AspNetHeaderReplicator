@@ -17,6 +17,8 @@ jobs:
   build_and_test:
     name: build_and_test
     runs-on: ${{ vars.DEFAULT_RUNS_ON }}
+    env:
+      
 
     steps:
       - uses: btungut/devops/.github/actions/common@master
@@ -41,7 +43,7 @@ jobs:
           echo -e "\nsteps.common.outputs.branch-version = $BRANCH_VERSION\n"
 
 
-      - uses: ./.github/actions/dotnet-common
+      - uses: ./app/.github/actions/dotnet-common
         with:
           dir-sln: app
           dir-src-project: app/src
