@@ -28,7 +28,6 @@ runs:
       working-directory: ${{ inputs.dir-sln }}
 
 
-      # run tests and publish cobertura report
     - name: dotnet_test
       id: dotnet_test
       shell: bash
@@ -100,7 +99,6 @@ runs:
       working-directory: ${{ runner.temp }}/coveragereport
       
 
-      # run integration tests
     - name: dotnet_integration_test
       id: dotnet_integration_test
       shell: bash
