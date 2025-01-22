@@ -3,11 +3,18 @@
   <PropertyGroup>
     <Description>DotNetHeaderReplicator: Middleware for replicating HTTP request headers into response headers efficiently with the rules you determined.</Description>
     <Authors>Burak Tungut</Authors>
+    <PackageId>DotNetHeaderReplicator</PackageId>
     <PackageProjectUrl>https://github.com/btungut/DotNetHeaderReplicator</PackageProjectUrl>
     <RepositoryUrl>https://github.com/btungut/DotNetHeaderReplicator</RepositoryUrl>
-    <PackageTags>http, headers, middleware, .net, asp.net, core</PackageTags>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>asp.net;dotnet;middleware;http;headers;replicator;response;request</PackageTags>
+    <PackageIcon>icon.png</PackageIcon>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <IncludeSymbols>true</IncludeSymbols>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -29,6 +36,11 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="icon.png" Pack="true" PackagePath="\" />
+    <None Include="..\LICENSE" Pack="true" PackagePath="\" />
   </ItemGroup>
 
 </Project>
