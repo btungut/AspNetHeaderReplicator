@@ -16,6 +16,8 @@ Or with the `nuget` command:
 nuget install AspNetHeaderReplicator
 ```
 
+---
+
 ## Usage
 
 To use the middleware, you need to add it to the pipeline in the `Configure` method of your `Startup` class (Or you can use without the `Startup` class if you are using the generic host):
@@ -36,6 +38,8 @@ new[] { "X-", "My-", "Req-", "Trace-", "Debug-", "Verbose-" }
 new[] { "auth", "credential", "token", "pass", "secret", "hash", "cert" };
 ```
 
+---
+
 ### Example 01: Use default configuration
 
 ```csharp
@@ -44,6 +48,8 @@ public void ConfigureServices(IServiceCollection services)
     services.AddHeaderReplicator();
 }
 ```
+
+---
 
 ### Example 02: Use default configuration AND add custom allowed headers
 
@@ -60,6 +66,8 @@ public void ConfigureServices(IServiceCollection services)
 }
 ```
 
+---
+
 ### Example 03: Use default configuration AND add custom ignored headers
 
 Following code snippet will ignore headers containing `ignored` in their name.
@@ -74,6 +82,8 @@ public void ConfigureServices(IServiceCollection services)
     });
 }
 ```
+
+---
 
 ### Example 04: Clear default configuration AND add custom allowed headers with custom ignored headers
 
@@ -97,6 +107,8 @@ public void ConfigureServices(IServiceCollection services)
     });
 }
 ```
+
+---
 
 ## Demo
 
@@ -159,6 +171,8 @@ curl --location 'http://localhost:5278/' \
 Response headers will be like below:
 
 ![response headers](.img/response_headers.png)
+
+---
 
 # License
 
