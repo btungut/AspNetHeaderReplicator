@@ -132,3 +132,11 @@ jobs:
             --source "$NUGET_SOURCE"
           echo -e "\n SUCCESS: dotnet nuget push for snupkg\n\n"
 
+          # echo multiline with env var
+          echo -e "\n\n
+          NuGet package published successfully!
+          Package Version: $PACKAGE_VERSION
+          https://www.nuget.org/packages/AspNetHeaderReplicator/$PACKAGE_VERSION/
+          \n" >> $GITHUB_STEP_SUMMARY
+
+
