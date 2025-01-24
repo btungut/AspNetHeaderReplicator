@@ -28,7 +28,7 @@ on:
       - 'LICENSE'
       - '.github/**'
 
-run-name: ${{ github.ref_name }} - ${{ github.event.head_commit.message || github.event.commits.message }}
+run-name: ${{ github.ref_name }} - ${{ github.event.head_commit.message || github.event.commits[0].message || github.event_name }}
 
 
 jobs:
