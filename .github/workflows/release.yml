@@ -54,10 +54,12 @@ jobs:
         id: download_artifacts
         uses: actions/download-artifact@v4
         with:
+          pattern: 'NuGet*'
           github-token: ${{ secrets.GH_TOKEN }}
           run-id: ${{ inputs.RC_RUN_ID }}
           path: ${{ env.DW_DIR }}
           repository: ${{ github.repository }}
+          merge-multiple: false
 
       - name: buro
         shell: bash
