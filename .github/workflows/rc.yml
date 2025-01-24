@@ -19,14 +19,14 @@ on:
           - diagnostic
         default: 'minimal'
 
-  push:
-    branches:
-      - rc/v*
-    paths-ignore: 
-      - 'README'
-      - 'README.md'
-      - 'LICENSE'
-      - '.github/**'
+  # push:
+  #   branches:
+  #     - rc/v*
+  #   paths-ignore: 
+  #     - 'README'
+  #     - 'README.md'
+  #     - 'LICENSE'
+  #     - '.github/**'
 
 run-name: ${{ github.ref_name }} - ${{ github.event.head_commit.message || github.event.commits[0].message || github.event_name }}
 
