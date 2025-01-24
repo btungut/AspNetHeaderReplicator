@@ -3,6 +3,11 @@ name: release candidate
 on:
   workflow_dispatch:
     inputs:
+      PUBLISH_NUGET_PACKAGE:
+        description: 'Publish NuGet package to nuget.org'
+        required: true
+        default: false
+        type: boolean
       DOTNET_VERBOSITY:
         type: choice
         description: 'Verbosity level for dotnet commands'
@@ -23,7 +28,7 @@ on:
       - 'LICENSE'
       - '.github/**'
 
-run-name: ${{ github.ref_name }} - ${{ github.event.head_commit.message || github.event_name }}
+run-name: ${{ github.ref_name }} - ${{ github.event.head_commit.message || github.event.commits.message }}
 
 
 jobs:
@@ -138,5 +143,5 @@ jobs:
           Package Version: $PACKAGE_VERSION
           https://www.nuget.org/packages/AspNetHeaderReplicator/$PACKAGE_VERSION/
           \n" >> $GITHUB_STEP_SUMMARY
-
+        if: ${{ inputs.PUBLISH_NUGET_PACKAGE == 'true' }}
 
