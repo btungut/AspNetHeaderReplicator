@@ -152,11 +152,13 @@ curl --location 'http://localhost:5278/' \
     --header 'a-header-credential-demo: somesecrets'
 ```
 
-![request headers](.img/request_headers.png | width=250)
+![request headers](.img/request_headers.png)
+
+> As you can see, headers are being executing without case sensitivity.
 
 Response headers will be like below:
 
-![response headers](.img/response_headers.png | width=250)
+![response headers](.img/response_headers.png)
 
 # License
 
@@ -164,4 +166,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 # Contributing
 
-Burak Tungut
+Owner : **Burak Tungut**
+
+Any contributions are welcome! Please post your issues and pull requests to the repository.
+
+Regards...
