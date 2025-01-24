@@ -1,17 +1,17 @@
 name: release stable
 
 on:
-  workflow_run: 
-    workflows: ["release candidate"]
-    types:
-      - completed
-  # workflow_dispatch:
-  #   inputs:
-  #     RC_RUN_ID:
-  #       description: 'Run ID for the release candidate'
-  #       required: true
+  # workflow_run: 
+  #   workflows: ["release candidate"]
+  #   types:
+  #     - completed
+  workflow_dispatch:
+    inputs:
+      RC_RUN_ID:
+        description: 'Run ID for the release candidate'
+        required: true
 
-run-name: release for ${{ github.event.workflow_run.id }}
+run-name: release for ${{ inputs.RC_RUN_ID }}
 
 jobs:
   main:
@@ -31,11 +31,6 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-
-          echo -e "\n
-          OBJ : ${{ toJson(github.event.workflow_run) }}\n\n
-          Release candidate URL : ${{ github.event.workflow_run.url }}\n
-          " >> $GITHUB_STEP_SUMMARY
 
           rm -rf $DW_PATH
           mkdir -p $DW_PATH
@@ -57,7 +52,7 @@ jobs:
           echo "RC_RUN_ID: $RC_RUN_ID"
           echo "BRANCH_VERSION: $BRANCH_VERSION"
 
-      # download artifacts from the release candidate run
+
       - name: download_artifacts
         id: download_artifacts
         uses: actions/download-artifact@v4
