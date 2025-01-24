@@ -25,9 +25,18 @@ jobs:
     name: build_and_test
     runs-on: ${{ vars.DEFAULT_RUNS_ON }}
     env:
-      DOTNET_VERBOSITY: ${{ github.event.inputs.DOTNET_PACK_VERBOSITY }}
+      DOTNET_VERBOSITY: ${{ inputs.DOTNET_PACK_VERBOSITY }}
+      DOTNET_FALANFILAN: ${{ github.event.inputs.DOTNET_PACK_VERBOSITY }}
+      DOTNET_FALANFILAN2: ${{ github.event.inputs.DOTNET_PACK_VERBOSITY || 'yalanciyi' }}
       
     steps:
+      - name: test
+        shell: bash
+        run: |
+          set -euo pipefail
+          printenv | grep DOTNET
+          exit 1
+
       - uses: btungut/devops/.github/actions/common@master
         id: common
 
