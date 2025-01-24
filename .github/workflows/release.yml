@@ -11,6 +11,7 @@ run-name: release for ${{ inputs.RC_RUN_ID }}
 
 jobs:
   main:
+      
     name: main
     runs-on: ${{ vars.DEFAULT_RUNS_ON }}
 
@@ -53,8 +54,10 @@ jobs:
         id: download_artifacts
         uses: actions/download-artifact@v4
         with:
+          github-token: ${{ secrets.GH_TOKEN }}
           run-id: ${{ inputs.RC_RUN_ID }}
           path: ${{ env.DW_DIR }}
+          repository: ${{ github.repository }}
 
       - name: buro
         shell: bash
