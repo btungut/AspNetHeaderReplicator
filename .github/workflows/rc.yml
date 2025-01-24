@@ -3,11 +3,17 @@ name: release candidate
 on:
   workflow_dispatch:
     inputs:
-      DOTNET_PACK_VERBOSITY:
-        description: 'Verbosity level for dotnet pack: quiet, minimal, normal, detailed, diagnostic'
-        required: false
+      DOTNET_VERBOSITY:
+        type: choice
+        description: 'Verbosity level for dotnet commands'
+        options:
+          - quiet
+          - minimal
+          - normal
+          - detailed
+          - diagnostic
         default: 'minimal'
-        type: string
+
   push:
     branches:
       - rc/v*
@@ -25,18 +31,9 @@ jobs:
     name: build_and_test
     runs-on: ${{ vars.DEFAULT_RUNS_ON }}
     env:
-      DOTNET_VERBOSITY: ${{ inputs.DOTNET_PACK_VERBOSITY || 'hgoppa' }}
-      DOTNET_FALANFILAN: ${{ github.event.inputs.DOTNET_PACK_VERBOSITY }}
-      DOTNET_FALANFILAN2: ${{ github.event.inputs.DOTNET_PACK_VERBOSITY || 'yalanciyi' }}
+      DOTNET_VERBOSITY: ${{ inputs.DOTNET_VERBOSITY || 'minimal' }}
       
     steps:
-      - name: test
-        shell: bash
-        run: |
-          set -euo pipefail
-          printenv | grep DOTNET
-          exit 1
-
       - uses: btungut/devops/.github/actions/common@master
         id: common
 
@@ -61,6 +58,7 @@ jobs:
 
       - uses: ./app/.github/actions/dotnet-common
         with:
+          dotnet-verbosity: ${{ env.DOTNET_VERBOSITY }}
           dir-sln: app
           dir-src-project: app/src
           dir-unit-tests: app/tests
