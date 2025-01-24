@@ -109,6 +109,7 @@ public void ConfigureServices(IServiceCollection services)
 ```
 
 ---
+<br /><br />
 
 ## Demo
 
@@ -164,15 +165,18 @@ curl --location 'http://localhost:5278/' \
     --header 'a-header-credential-demo: somesecrets'
 ```
 
-![request headers](.img/request_headers.png)
+![request headers](https://raw.githubusercontent.com/btungut/AspNetHeaderReplicator/refs/heads/master/.img/request_headers.png)
 
 > As you can see, headers are being executing without case sensitivity.
 
 Response headers will be like below:
 
-![response headers](.img/response_headers.png)
+![response headers](https://raw.githubusercontent.com/btungut/AspNetHeaderReplicator/refs/heads/master/.img/response_headers.png)
+
+> As you can see, headers are being replicated and/or ignored according to the configuration.
 
 ---
+<br /><br />
 
 # License
 
