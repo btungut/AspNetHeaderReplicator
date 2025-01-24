@@ -2,6 +2,12 @@ name: release candidate
 
 on:
   workflow_dispatch:
+    inputs:
+      DOTNET_PACK_VERBOSITY:
+        description: 'Verbosity level for dotnet pack: quiet, minimal, normal, detailed, diagnostic'
+        required: false
+        default: 'minimal'
+        type: string
   push:
     branches:
       - rc/v*
@@ -19,7 +25,7 @@ jobs:
     name: build_and_test
     runs-on: ${{ vars.DEFAULT_RUNS_ON }}
     env:
-      DOTNET_VERBOSITY: minimal
+      DOTNET_VERBOSITY: ${{ github.event.inputs.DOTNET_PACK_VERBOSITY }}
       
     steps:
       - uses: btungut/devops/.github/actions/common@master
