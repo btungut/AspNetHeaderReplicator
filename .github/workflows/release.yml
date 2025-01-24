@@ -1,0 +1,80 @@
+name: release stable
+
+on:
+  workflow_dispatch:
+    inputs:
+      RC_RUN_ID:
+        description: 'Run ID for the release candidate'
+        required: true
+
+run-name: release for ${{ inputs.RC_RUN_ID }}
+
+jobs:
+  main:
+    name: main
+    runs-on: ${{ vars.DEFAULT_RUNS_ON }}
+
+    steps:
+      - uses: btungut/devops/.github/actions/common@master
+        id: common
+
+
+      - name: iteration_vars
+        id: iteration_vars
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          DW_DIR="${{ runner.temp }}/download"
+          rm -rf $DW_DIR
+          mkdir -p $DW_DIR
+          echo "DW_DIR=$DW_DIR" >> $GITHUB_ENV
+          echo "DW_DIR=$DW_DIR"
+
+          RC_RUN_ID="${{ inputs.RC_RUN_ID }}"
+          if [ -z "$RC_RUN_ID" ]; then
+              echo "inputs.RC_RUN_ID is null or empty whitespace!"
+              exit 1
+          fi
+          echo "RC_RUN_ID=$RC_RUN_ID" >> $GITHUB_ENV
+          echo "RC_RUN_ID=$RC_RUN_ID"         
+
+          BRANCH_VERSION="${{ steps.common.outputs.branch-version }}"
+          if [ -z "$BRANCH_VERSION" ]; then
+              echo "steps.common.outputs.branch-version is null or empty whitespace!"
+              exit 1
+          fi
+
+          echo "RC_RUN_ID: $RC_RUN_ID"
+          echo "BRANCH_VERSION: $BRANCH_VERSION"
+
+      # download artifacts from the release candidate run
+      - name: download_artifacts
+        id: download_artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: 'NuGet*'
+          run-id: ${{ inputs.RC_RUN_ID }}
+          path: ${{ env.DW_DIR }}
+
+      - name: buro
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "PWD = $(pwd)"
+          ls -al ${{ env.DW_DIR }}
+          echo "bekliyore..."
+          sleep 120s
+        
+
+      # - name: create_release
+      #   id: create_release
+      #   uses: actions/create-release@v1
+      #   with:
+      #     tag_name: ${{ steps.iteration_vars.outputs.BRANCH_VERSION }}
+      #     release_name: ${{ steps.iteration_vars.outputs.BRANCH_VERSION }}
+      #     body: |
+      #       Release candidate run ID: ${{ steps.iteration_vars.outputs.RC_RUN_ID }}
+      #     draft: false
+      #     prerelease: false
+      #     token: ${{ secrets.GITHUB_TOKEN }}
