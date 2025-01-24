@@ -3,7 +3,6 @@
 /// </summary>
 
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
 
 namespace AspNetHeaderReplicator.Internals;
 
@@ -12,16 +11,12 @@ internal class HeaderReplicationBusiness
     public const string RedactedValue = $"REDACTED_By_{nameof(HeaderReplicationBusiness)}";
 
     private readonly IHeaderReplicatorConfiguration _config;
-    private readonly ILogger _logger;
 
-    internal HeaderReplicationBusiness(IHeaderReplicatorConfiguration config, ILogger logger = null)
+    internal HeaderReplicationBusiness(IHeaderReplicatorConfiguration config)
     {
         _config = config ?? throw new ArgumentNullException(nameof(config));
-        if(_config.IgnoredHeaderSentences == null) throw new ArgumentNullException(nameof(config.IgnoredHeaderSentences));
-        if(_config.AllowedHeaderPrefixes == null) throw new ArgumentNullException(nameof(config.AllowedHeaderPrefixes));
-
-        _logger = logger;
-        _logger?.LogDebug("HeaderReplicationBusiness instance created with config {@config}", config);
+        if (_config.IgnoredHeaderSentences == null) throw new ArgumentNullException(nameof(config.IgnoredHeaderSentences));
+        if (_config.AllowedHeaderPrefixes == null) throw new ArgumentNullException(nameof(config.AllowedHeaderPrefixes));
     }
 
     internal IHeaderDictionary GetReplicatedHeaders(IHeaderDictionary requestHeaders)
@@ -38,16 +33,8 @@ internal class HeaderReplicationBusiness
         if (_config.AllowAll)
         {
             replicatedHeaders.AddOrReplaceRange(requestHeaders);
-            _logger?.LogDebug("AllowAll is true. All headers will be replicated {@logCtx}", new
-            {
-                sourceHeaders = requestHeaders,
-                replicatedHeaders = replicatedHeaders,
-                config = _config
-            });
             return replicatedHeaders;
         }
-
-        _logger?.LogDebug("AllowAll is false. Only the headers that match the allowed prefixes and also do not contain the ignored sentences will be replicated {@config}", _config);
 
         // Iterate over each header in the request headers.
         foreach (var header in requestHeaders)
@@ -70,7 +57,6 @@ internal class HeaderReplicationBusiness
             {
                 replicatedHeaders[key] = RedactedValue;
                 HeaderReplicationCache.Instance.AddIgnoredHeader(key);
-                _logger?.LogDebug("The header key is cached as ignored {@key}", key);
                 continue;
             }
 
@@ -87,11 +73,8 @@ internal class HeaderReplicationBusiness
             {
                 replicatedHeaders[key] = value;
                 HeaderReplicationCache.Instance.AddAllowedHeader(key);
-                _logger?.LogDebug("The header key is cached as allowed {@key}", key);
                 continue;
             }
-
-            _logger?.LogDebug("The header key is skipped {@key}", key);
         }
 
         return replicatedHeaders;
@@ -106,6 +89,4 @@ internal class HeaderReplicationBusiness
 
         return key.Substring(0, indexOfDash + 1);
     }
-
 }
-
