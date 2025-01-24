@@ -6,6 +6,9 @@ inputs:
     description: 'Verbosity level for dotnet pack: quiet, minimal, normal, detailed, diagnostic'
     required: true
     default: 'minimal'
+  version-assembly:
+    description: 'Version for the assembly'
+    required: true
   dir-tmp:
     description: 'The directory of the temporary files'
     required: true
@@ -36,7 +39,6 @@ runs:
         set -euo pipefail
         
         TMP_DIR_ROOT="${{ inputs.dir-tmp }}"
-        # echo and exit if TMP_DIR_ROOT does not exist command single line
         [ -d "$TMP_DIR_ROOT" ] || { echo "TMP_DIR_ROOT does not exist: $TMP_DIR_ROOT"; exit 1; }
 
         DOTNET_TMP_DIR="${TMP_DIR_ROOT}/dotnet"
@@ -45,7 +47,10 @@ runs:
         echo "DOTNET_TMP_DIR=$DOTNET_TMP_DIR" >> $GITHUB_ENV
         echo "DOTNET_TMP_DIR=$DOTNET_TMP_DIR"
 
-  
+        VER_ASSEMBLY="${{ inputs.version-assembly }}"
+        [[ "$VER_ASSEMBLY" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "VER_ASSEMBLY ($VER_ASSEMBLY) is not semver!"; exit 1; }
+
+
     - name: dotnet_restore_and_build
       id: dotnet_restore_and_build
       shell: bash
@@ -53,7 +58,10 @@ runs:
         set -euo pipefail
         echo "PWD = $(pwd)"
         dotnet restore
-        dotnet build -c Release --verbosity ${{ inputs.dotnet-verbosity }}
+        dotnet build \
+          -c Release \
+          /p:Version=${{ inputs.version-assembly }} \
+          --verbosity ${{ inputs.dotnet-verbosity }}
       working-directory: ${{ inputs.dir-sln }}
 
 

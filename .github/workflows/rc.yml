@@ -71,6 +71,7 @@ jobs:
           dir-unit-tests: app/tests
           dir-integration-tests: app/tests_integration
           upload-built-src: true
+          version-assembly: ${{ steps.common.outputs.branch-version }}
 
           
       - name: dotnet_pack
