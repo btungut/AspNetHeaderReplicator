@@ -21,9 +21,9 @@ on:
       - 'README'
       - 'README.md'
       - 'LICENSE'
-      # - '.github/**'
+      - '.github/**'
 
-run-name: ${{ github.ref_name }} - ${{ github.event.head_commit.message }}
+run-name: ${{ github.ref_name }} - ${{ github.event.head_commit.message || github.event_name }}
 
 
 jobs:
@@ -32,6 +32,7 @@ jobs:
     runs-on: ${{ vars.DEFAULT_RUNS_ON }}
     env:
       DOTNET_VERBOSITY: ${{ inputs.DOTNET_VERBOSITY || 'minimal' }}
+      NUGET_SOURCE: "https://api.nuget.org/v3/index.json"
       
     steps:
       - uses: btungut/devops/.github/actions/common@master
@@ -101,3 +102,33 @@ jobs:
           name: NuGet-${{ env.PACKAGE_VERSION }}
           if-no-files-found: error
           include-hidden-files: true
+
+      - name: publish_nuget_package
+        id: publish_nuget_package
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "PWD = $(pwd)"
+
+          NUGET_API_KEY="${{ secrets.NUGET_API_KEY }}"
+          if [ -z "$NUGET_API_KEY" ]; then
+              echo "NUGET_API_KEY is null or empty whitespace!"
+              exit 1
+          fi
+
+          echo -e "\ndotnet nuget push for nupkg\n"
+          dotnet nuget push \
+            ${{ env.OUTPUT_DIR }}/*.nupkg \
+            --skip-duplicate \
+            --api-key "$NUGET_API_KEY" \
+            --source "$NUGET_SOURCE"
+          echo -e "\n SUCCESS: dotnet nuget push for nupkg\n\n"
+
+          echo -e "\ndotnet nuget push for snupkg\n"
+          dotnet nuget push \
+            ${{ env.OUTPUT_DIR }}/*.snupkg \
+            --skip-duplicate \
+            --api-key "$NUGET_API_KEY" \
+            --source "$NUGET_SOURCE"
+          echo -e "\n SUCCESS: dotnet nuget push for snupkg\n\n"
+
