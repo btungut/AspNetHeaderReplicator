@@ -14,6 +14,8 @@ jobs:
       
     name: main
     runs-on: ${{ vars.DEFAULT_RUNS_ON }}
+    env:
+      DW_PATH: ${{ github.workspace }}/.tmp/download
 
     steps:
       - uses: btungut/devops/.github/actions/common@master
@@ -26,7 +28,15 @@ jobs:
         run: |
           set -euo pipefail
 
-          DW_DIR="${{ runner.temp }}/download"
+          echo "PWD = $(pwd)"
+          echo "DW_PATH = $DW_PATH"
+
+          sleep 120s
+
+          exit 1
+
+
+          DW_DIR=""
           rm -rf $DW_DIR
           mkdir -p $DW_DIR
           echo "DW_DIR=$DW_DIR" >> $GITHUB_ENV
