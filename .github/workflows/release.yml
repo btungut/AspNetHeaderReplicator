@@ -28,19 +28,8 @@ jobs:
         run: |
           set -euo pipefail
 
-          echo "PWD = $(pwd)"
-          echo "DW_PATH = $DW_PATH"
-
-          sleep 120s
-
-          exit 1
-
-
-          DW_DIR=""
-          rm -rf $DW_DIR
-          mkdir -p $DW_DIR
-          echo "DW_DIR=$DW_DIR" >> $GITHUB_ENV
-          echo "DW_DIR=$DW_DIR"
+          rm -rf $DW_PATH
+          mkdir -p $DW_PATH
 
           RC_RUN_ID="${{ inputs.RC_RUN_ID }}"
           if [ -z "$RC_RUN_ID" ]; then
@@ -67,9 +56,10 @@ jobs:
           pattern: 'NuGet*'
           github-token: ${{ secrets.GH_TOKEN }}
           run-id: ${{ inputs.RC_RUN_ID }}
-          path: ${{ env.DW_DIR }}
+          path: ${{ env.DW_PATH }}
           repository: ${{ github.repository }}
           merge-multiple: false
+          
 
       - name: buro
         shell: bash
@@ -77,13 +67,13 @@ jobs:
           set -euo pipefail
           echo "PWD = $(pwd)"
 
-          DW_DIR="${{ env.DW_DIR }}"
-          [ -z "$DW_DIR" ] && { echo "DW_DIR is null or empty whitespace!"; exit 1; }
-          [ ! -d "$DW_DIR" ] && { echo "DW_DIR does not exist!"; exit 1; }
+          DW_PATH="${{ env.DW_PATH }}"
+          [ -z "$DW_PATH" ] && { echo "DW_PATH is null or empty whitespace!"; exit 1; }
+          [ ! -d "$DW_PATH" ] && { echo "DW_PATH does not exist!"; exit 1; }
           
-          pushd $DW_DIR
+          pushd $DW_PATH
           ls -al
-          [ -z "$(ls -A)" ] && { echo "DW_DIR is empty! PLEASE CHECK YOUR INPUTS!!!"; exit 1; }
+          [ -z "$(ls -A)" ] && { echo "DW_PATH is empty! PLEASE CHECK YOUR INPUTS!!!"; exit 1; }
           
 
           echo "bekliyore..."
