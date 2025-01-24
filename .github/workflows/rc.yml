@@ -143,5 +143,5 @@ jobs:
           Package Version: $PACKAGE_VERSION
           https://www.nuget.org/packages/AspNetHeaderReplicator/$PACKAGE_VERSION/
           \n" >> $GITHUB_STEP_SUMMARY
-        if: ${{ inputs.PUBLISH_NUGET_PACKAGE == 'true' }}
+        if: ${{ inputs.PUBLISH_NUGET_PACKAGE }}
 
