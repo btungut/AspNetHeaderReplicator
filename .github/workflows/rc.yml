@@ -1,0 +1,134 @@
+name: release candidate
+
+on:
+  workflow_dispatch:
+    inputs:
+      DOTNET_VERBOSITY:
+        type: choice
+        description: 'Verbosity level for dotnet commands'
+        options:
+          - quiet
+          - minimal
+          - normal
+          - detailed
+          - diagnostic
+        default: 'minimal'
+
+  push:
+    branches:
+      - rc/v*
+    paths-ignore: 
+      - 'README'
+      - 'README.md'
+      - 'LICENSE'
+      - '.github/**'
+
+run-name: ${{ github.ref_name }} - ${{ github.event.head_commit.message || github.event_name }}
+
+
+jobs:
+  build_and_test:
+    name: build_and_test
+    runs-on: ${{ vars.DEFAULT_RUNS_ON }}
+    env:
+      DOTNET_VERBOSITY: ${{ inputs.DOTNET_VERBOSITY || 'minimal' }}
+      NUGET_SOURCE: "https://api.nuget.org/v3/index.json"
+      
+    steps:
+      - uses: btungut/devops/.github/actions/common@master
+        id: common
+
+        
+      - uses: btungut/devops/.github/actions/git-checkout@master
+        with:
+          gitToken: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: iteration_vars
+        id: iteration_vars
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          BRANCH_VERSION="${{ steps.common.outputs.branch-version }}"
+          if [ -z "$BRANCH_VERSION" ]; then
+              echo "steps.common.outputs.branch-version is null or empty whitespace!"
+              exit 1
+          fi
+          echo -e "\nsteps.common.outputs.branch-version = $BRANCH_VERSION\n"
+
+
+      - uses: ./app/.github/actions/dotnet-common
+        with:
+          dotnet-verbosity: ${{ env.DOTNET_VERBOSITY }}
+          dir-sln: app
+          dir-src-project: app/src
+          dir-unit-tests: app/tests
+          dir-integration-tests: app/tests_integration
+      
+      - name: dotnet_pack
+        id: dotnet_pack
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "PWD = $(pwd)"
+
+          OUTPUT_DIR="${{ runner.temp }}/.nuget"
+          echo "OUTPUT_DIR=$OUTPUT_DIR" >> $GITHUB_ENV
+          echo "OUTPUT_DIR=$OUTPUT_DIR"
+          rm -rf $OUTPUT_DIR
+          mkdir -p $OUTPUT_DIR
+          
+          PACKAGE_VERSION="${{ steps.common.outputs.branch-version }}-rc${{ steps.common.outputs.rev-unique }}"
+          echo "PACKAGE_VERSION=$PACKAGE_VERSION" >> $GITHUB_ENV
+          echo "PACKAGE_VERSION=$PACKAGE_VERSION"
+
+          dotnet pack \
+            -c Release \
+            --verbosity $DOTNET_VERBOSITY \
+            --no-build \
+            --no-restore \
+            -p:PackageVersion="$PACKAGE_VERSION" \
+            --output $OUTPUT_DIR
+
+          echo -e "\n\nls for $OUTPUT_DIR\n"
+          ls -al $OUTPUT_DIR
+
+        working-directory: app/src
+
+      - name: upload_artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          path: ${{ env.OUTPUT_DIR }}
+          name: NuGet-${{ env.PACKAGE_VERSION }}
+          if-no-files-found: error
+          include-hidden-files: true
+
+      - name: publish_nuget_package
+        id: publish_nuget_package
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "PWD = $(pwd)"
+
+          NUGET_API_KEY="${{ secrets.NUGET_API_KEY }}"
+          if [ -z "$NUGET_API_KEY" ]; then
+              echo "NUGET_API_KEY is null or empty whitespace!"
+              exit 1
+          fi
+
+          echo -e "\ndotnet nuget push for nupkg\n"
+          dotnet nuget push \
+            ${{ env.OUTPUT_DIR }}/*.nupkg \
+            --skip-duplicate \
+            --api-key "$NUGET_API_KEY" \
+            --source "$NUGET_SOURCE"
+          echo -e "\n SUCCESS: dotnet nuget push for nupkg\n\n"
+
+          echo -e "\ndotnet nuget push for snupkg\n"
+          dotnet nuget push \
+            ${{ env.OUTPUT_DIR }}/*.snupkg \
+            --skip-duplicate \
+            --api-key "$NUGET_API_KEY" \
+            --source "$NUGET_SOURCE"
+          echo -e "\n SUCCESS: dotnet nuget push for snupkg\n\n"
+

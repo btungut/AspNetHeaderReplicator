@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.TestHost;
 
-namespace DotNetHeaderReplicator.IntegrationTests;
+namespace AspNetHeaderReplicator.IntegrationTests;
 
 public class IntegrationTestBuilder : IDisposable
 {

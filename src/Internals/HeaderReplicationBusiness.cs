@@ -5,7 +5,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
-namespace DotNetHeaderReplicator.Internals;
+namespace AspNetHeaderReplicator.Internals;
 
 internal class HeaderReplicationBusiness
 {
@@ -65,7 +65,7 @@ internal class HeaderReplicationBusiness
                 continue;
             }
 
-            bool isIgnored = _config.IgnoredHeaderSentences.Any(sentence => key.Contains(sentence, StringComparison.OrdinalIgnoreCase));
+            bool isIgnored = _config.IgnoredHeaderSentences.Any(ignoredSentence => key.IndexOf(ignoredSentence, StringComparison.OrdinalIgnoreCase) >= 0);
             if (isIgnored)
             {
                 replicatedHeaders[key] = RedactedValue;

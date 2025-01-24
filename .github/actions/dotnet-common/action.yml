@@ -1,0 +1,114 @@
+name: dotnet-common
+description: 'Common dotnet actions for restore, build, test, and publish cobertura report'
+
+inputs:
+  dotnet-verbosity:
+    description: 'Verbosity level for dotnet pack: quiet, minimal, normal, detailed, diagnostic'
+    required: true
+    default: 'minimal'
+  dir-sln:
+    description: 'The directory of the solution file'
+    required: true
+  dir-src-project:
+    description: 'The directory of the project to build'
+    required: true
+  dir-unit-tests:
+    description: 'The directory of the unit tests project'
+    required: true
+  dir-integration-tests:
+    description: 'The directory of the integration tests project'
+
+
+runs:
+  using: "composite"
+  steps:
+    - name: dotnet_restore_and_build
+      id: dotnet_restore_and_build
+      shell: bash
+      run: |
+        set -euo pipefail
+        echo "PWD = $(pwd)"
+        dotnet restore
+        dotnet build -c Release --verbosity ${{ inputs.dotnet-verbosity }}
+      working-directory: ${{ inputs.dir-sln }}
+
+
+    - name: dotnet_test
+      id: dotnet_test
+      shell: bash
+      run: |
+        set -euo pipefail
+        echo "PWD = $(pwd)"
+        rm -rf ./coverage*
+        dotnet test --collect:"XPlat Code Coverage" --results-directory ./coverage -c Release --no-build --no-restore --verbosity ${{ inputs.dotnet-verbosity }}
+      working-directory: ${{ inputs.dir-unit-tests }}
+
+
+    - name: copy_coverage_files
+      shell: bash
+      run: |
+        set -euo pipefail
+        echo "PWD = $(pwd)"
+
+        # echo and exit if coverage folder does not exist
+        if [ ! -d "./coverage" ]; then
+          ls -al
+          echo "Coverage folder does not exist"
+          exit 1
+        fi
+
+        # find *.xml file under ./coverage directory, if not exist or exist more than one fail, else copy it to the root directory
+        coverage_files=$(find ./coverage -name '*.xml')
+        if [ $(echo "$coverage_files" | wc -l) -ne 1 ]; then
+          echo "Coverage file not found or found more than one: $coverage_files"
+          exit 1
+        fi
+
+        cp $coverage_files ${{ runner.temp }}/result.xml
+      working-directory: ${{ inputs.dir-unit-tests }}
+
+
+    - uses: danielpalme/ReportGenerator-GitHub-Action@5.4.3
+      with:
+        reports: ${{ runner.temp }}/result.xml
+        reporttypes: "Html;MarkdownSummaryGithub;Cobertura"
+        toolpath: 'reportgeneratortool'
+        targetdir: ${{ runner.temp }}/coveragereport
+        tag: ${{ runner.name }}
+        
+
+    - name: Upload coverage report artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: CoverageReport
+        path: ${{ runner.temp }}/coveragereport 
+
+
+    - name: Publish coverage in build summary
+      run: |
+        set -euo pipefail
+
+        # find md file, if not exist or exist more than one fail, else get the path
+        md_files=$(find ${{ runner.temp }}/coveragereport -name '*.md')
+        if [ $(echo "$md_files" | wc -l) -ne 1 ]; then
+          echo "Markdown file not found or found more than one: $md_files"
+          exit 1
+        fi
+        
+        echo "### REPORT : $md_files"
+        cat $md_files
+        echo "### REPORT END"
+
+        cat $md_files >> $GITHUB_STEP_SUMMARY
+      shell: bash
+      working-directory: ${{ runner.temp }}/coveragereport
+      
+
+    - name: dotnet_integration_test
+      id: dotnet_integration_test
+      shell: bash
+      run: |
+        set -euo pipefail
+        dotnet test -c Release --no-build --no-restore --verbosity ${{ inputs.dotnet-verbosity }}
+      working-directory: ${{ inputs.dir-integration-tests }}
+      if: ${{ success() && (inputs.dir-integration-tests != '') }}

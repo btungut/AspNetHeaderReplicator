@@ -1,7 +1,7 @@
 /// <summary>
 /// Represents a builder for <see cref="IHeaderReplicatorConfiguration"/>.
 /// </summary>
-namespace DotNetHeaderReplicator;
+namespace AspNetHeaderReplicator;
 
 public class HeaderReplicatorConfigurationBuilder
 {

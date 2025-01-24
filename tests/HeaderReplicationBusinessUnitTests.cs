@@ -2,10 +2,10 @@
 /// Represents the business unit tests for the <see cref="HeaderReplicationBusiness"/> class.
 /// </summary>
 
-using DotNetHeaderReplicator.Internals;
+using AspNetHeaderReplicator.Internals;
 using Microsoft.AspNetCore.Http;
 
-namespace DotNetHeaderReplicator.Tests;
+namespace AspNetHeaderReplicator.Tests;
 
 public class HeaderReplicationBusinessUnitTests
 {

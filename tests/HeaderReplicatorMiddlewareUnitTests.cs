@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Moq;
 
-namespace DotNetHeaderReplicator.Tests;
+namespace AspNetHeaderReplicator.Tests;
 
 public class HeaderReplicatorMiddlewareUnitTests
 {

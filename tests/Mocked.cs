@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
 using Moq;
 
-namespace DotNetHeaderReplicator.Tests;
+namespace AspNetHeaderReplicator.Tests;
 
 internal static class Helpers
 {

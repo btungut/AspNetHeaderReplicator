@@ -1,4 +1,4 @@
-namespace DotNetHeaderReplicator.IntegrationTests;
+namespace AspNetHeaderReplicator.IntegrationTests;
 
 internal static class Helpers
 {
