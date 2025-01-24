@@ -65,20 +65,14 @@ jobs:
       - uses: ./app/.github/actions/dotnet-common
         with:
           dotnet-verbosity: ${{ env.DOTNET_VERBOSITY }}
+          dir-tmp: ${{ steps.common.outputs.workflow-tmp-dir }}
           dir-sln: app
           dir-src-project: app/src
           dir-unit-tests: app/tests
           dir-integration-tests: app/tests_integration
+          upload-built-src: true
 
-      - name: upload_src
-        uses: actions/upload-artifact@v4
-        with:
-          path: app/src
-          name: src
-          compression-level: 9
-          if-no-files-found: error
-          include-hidden-files: true
-      
+          
       - name: dotnet_pack
         id: dotnet_pack
         shell: bash

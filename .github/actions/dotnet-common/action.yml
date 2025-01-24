@@ -6,6 +6,9 @@ inputs:
     description: 'Verbosity level for dotnet pack: quiet, minimal, normal, detailed, diagnostic'
     required: true
     default: 'minimal'
+  dir-tmp:
+    description: 'The directory of the temporary files'
+    required: true
   dir-sln:
     description: 'The directory of the solution file'
     required: true
@@ -17,11 +20,32 @@ inputs:
     required: true
   dir-integration-tests:
     description: 'The directory of the integration tests project'
+  upload-built-src:
+    description: 'Upload the built source code'
+    required: true
+
 
 
 runs:
   using: "composite"
   steps:
+    - name: tmp_dir
+      id: tmp_dir
+      shell: bash
+      run: |
+        set -euo pipefail
+        
+        TMP_DIR_ROOT="${{ inputs.dir-tmp }}"
+        # echo and exit if TMP_DIR_ROOT does not exist command single line
+        [ -d "$TMP_DIR_ROOT" ] || { echo "TMP_DIR_ROOT does not exist: $TMP_DIR_ROOT"; exit 1; }
+
+        DOTNET_TMP_DIR="${TMP_DIR_ROOT}/dotnet"
+        rm -rf $DOTNET_TMP_DIR
+        mkdir -p $DOTNET_TMP_DIR
+        echo "DOTNET_TMP_DIR=$DOTNET_TMP_DIR" >> $GITHUB_ENV
+        echo "DOTNET_TMP_DIR=$DOTNET_TMP_DIR"
+
+  
     - name: dotnet_restore_and_build
       id: dotnet_restore_and_build
       shell: bash
@@ -64,16 +88,16 @@ runs:
           exit 1
         fi
 
-        cp $coverage_files ${{ runner.temp }}/result.xml
+        cp $coverage_files "${{ env.DOTNET_TMP_DIR }}/result.xml"
       working-directory: ${{ inputs.dir-unit-tests }}
 
 
     - uses: danielpalme/ReportGenerator-GitHub-Action@5.4.3
       with:
-        reports: ${{ runner.temp }}/result.xml
+        reports: ${{ env.DOTNET_TMP_DIR }}/result.xml
         reporttypes: "Html;MarkdownSummaryGithub;Cobertura"
         toolpath: 'reportgeneratortool'
-        targetdir: ${{ runner.temp }}/coveragereport
+        targetdir: ${{ env.DOTNET_TMP_DIR }}/coveragereport
         tag: ${{ runner.name }}
         
 
@@ -81,7 +105,7 @@ runs:
       uses: actions/upload-artifact@v4
       with:
         name: CoverageReport
-        path: ${{ runner.temp }}/coveragereport 
+        path: ${{ env.DOTNET_TMP_DIR }}/coveragereport
 
 
     - name: Publish coverage in build summary
@@ -89,7 +113,7 @@ runs:
         set -euo pipefail
 
         # find md file, if not exist or exist more than one fail, else get the path
-        md_files=$(find ${{ runner.temp }}/coveragereport -name '*.md')
+        md_files=$(find ${{ env.DOTNET_TMP_DIR }}/coveragereport -name '*.md')
         if [ $(echo "$md_files" | wc -l) -ne 1 ]; then
           echo "Markdown file not found or found more than one: $md_files"
           exit 1
@@ -101,7 +125,7 @@ runs:
 
         cat $md_files >> $GITHUB_STEP_SUMMARY
       shell: bash
-      working-directory: ${{ runner.temp }}/coveragereport
+      working-directory: ${{ env.DOTNET_TMP_DIR }}/coveragereport
       
 
     - name: dotnet_integration_test
@@ -112,3 +136,13 @@ runs:
         dotnet test -c Release --no-build --no-restore --verbosity ${{ inputs.dotnet-verbosity }}
       working-directory: ${{ inputs.dir-integration-tests }}
       if: ${{ success() && (inputs.dir-integration-tests != '') }}
+
+    - name: upload_built_src
+      uses: actions/upload-artifact@v4
+      with:
+        path: ${{ inputs.dir-src-project }}
+        name: src
+        compression-level: 9
+        if-no-files-found: error
+        include-hidden-files: true
+      if: ${{ inputs.upload-built-src }}
