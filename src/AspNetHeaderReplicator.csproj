@@ -5,7 +5,7 @@
     <Authors>Burak Tungut</Authors>
 
     <PackageId>AspNetHeaderReplicator</PackageId>
-    <PackageTags>asp.net;dotnet;middleware;http;headers;replicator;response;request</PackageTags>
+    <PackageTags>asp.net;dotnet;aspnetcore;netcore;middleware;http;headers;replicator;response;request</PackageTags>
     <PackageIcon>icon.png</PackageIcon>
     <PackageProjectUrl>https://github.com/btungut/AspNetHeaderReplicator</PackageProjectUrl>
 
@@ -16,14 +16,16 @@
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <IncludeSymbols>true</IncludeSymbols>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageLicenseFile>.\LICENSE</PackageLicenseFile>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    
 
   </PropertyGroup>
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
     <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>10.0</LangVersion>
     <Nullable>disable</Nullable>
     <Namespace>AspNetHeaderReplicator</Namespace>
   </PropertyGroup>

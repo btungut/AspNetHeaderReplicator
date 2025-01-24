@@ -13,9 +13,9 @@ internal static class HeaderDictionaryExtensions
         if (dic == null) throw new ArgumentNullException(nameof(dic));
         if (source == null) throw new ArgumentNullException(nameof(source));
 
-        foreach (var (key, value) in source)
+        foreach (var item in source)
         {
-            dic[key] = value;
+            dic[item.Key] = item.Value;
         }
     }
 }
