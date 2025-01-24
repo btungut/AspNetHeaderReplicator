@@ -1,23 +1,20 @@
 ﻿/// <summary>
 /// Represents the middleware that replicates headers from the request to the response.
 /// </summary>
-﻿
+
 
 using AspNetHeaderReplicator.Internals;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
 
 namespace AspNetHeaderReplicator;
 
 public class HeaderReplicatorMiddleware : IMiddleware
 {
     private readonly IHeaderReplicatorConfiguration _config;
-    private readonly ILogger _logger;
 
-    public HeaderReplicatorMiddleware(IHeaderReplicatorConfiguration config, ILogger<HeaderReplicatorMiddleware> logger = null)
+    public HeaderReplicatorMiddleware(IHeaderReplicatorConfiguration config)
     {
         _config = config ?? throw new ArgumentNullException(nameof(config));
-        _logger = logger;
     }
 
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
@@ -25,7 +22,7 @@ public class HeaderReplicatorMiddleware : IMiddleware
         if (context == null) throw new ArgumentNullException(nameof(context));
         if (next == null) throw new ArgumentNullException(nameof(next));
 
-        var business = new HeaderReplicationBusiness(_config, _logger);
+        var business = new HeaderReplicationBusiness(_config);
 
         // Add the replicated headers from request to the response when the response is starting.
         context.Response.OnStarting(() =>

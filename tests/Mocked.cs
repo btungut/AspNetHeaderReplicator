@@ -2,7 +2,6 @@
 /// Represents extension and helper methods for the tests.
 /// </summary>
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
 using Moq;
 
@@ -132,21 +131,21 @@ internal static class Helpers
 
 internal static class Mocked
 {
-    public static ILogger<T> GetLogger<T>()
-    {
-        // Can not create proxy for type Microsoft.Extensions.Logging.ILogger
-        var mockLogger = new Mock<ILogger<T>>();
-        mockLogger
-            .Setup(l => l.Log(
-                It.IsAny<LogLevel>(),
-                It.IsAny<EventId>(),
-                It.IsAny<object>(),
-                It.IsAny<Exception>(),
-                It.IsAny<Func<object, Exception, string>>()
-            ));
+    // public static ILogger<T> GetLogger<T>()
+    // {
+    //     // Can not create proxy for type Microsoft.Extensions.Logging.ILogger
+    //     var mockLogger = new Mock<ILogger<T>>();
+    //     mockLogger
+    //         .Setup(l => l.Log(
+    //             It.IsAny<LogLevel>(),
+    //             It.IsAny<EventId>(),
+    //             It.IsAny<object>(),
+    //             It.IsAny<Exception>(),
+    //             It.IsAny<Func<object, Exception, string>>()
+    //         ));
 
-        return mockLogger.Object;
-    }
+    //     return mockLogger.Object;
+    // }
 
 
     public static IHeaderReplicatorConfiguration GetHeaderReplicatorConfigurationWithDefaults(bool allowAll)
