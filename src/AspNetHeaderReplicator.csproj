@@ -16,9 +16,9 @@
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <IncludeSymbols>true</IncludeSymbols>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageLicenseFile>.\LICENSE</PackageLicenseFile>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <PackageReadmeFile>.\README.md</PackageReadmeFile>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     
 
   </PropertyGroup>
