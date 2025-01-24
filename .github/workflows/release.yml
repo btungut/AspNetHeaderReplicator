@@ -62,7 +62,16 @@ jobs:
         run: |
           set -euo pipefail
           echo "PWD = $(pwd)"
-          ls -al ${{ env.DW_DIR }}
+
+          DW_DIR="${{ env.DW_DIR }}"
+          [ -z "$DW_DIR" ] && { echo "DW_DIR is null or empty whitespace!"; exit 1; }
+          [ ! -d "$DW_DIR" ] && { echo "DW_DIR does not exist!"; exit 1; }
+          
+          pushd $DW_DIR
+          ls -al
+          [ -z "$(ls -A)" ] && { echo "DW_DIR is empty!"; exit 1; }
+          
+
           echo "bekliyore..."
           sleep 120s
         
