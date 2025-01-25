@@ -19,7 +19,7 @@
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    
+
 
   </PropertyGroup>
 
@@ -46,11 +46,16 @@
 
   <ItemGroup>
     <None Include="icon.png" Pack="true" PackagePath="\" />
-    <None Include="..\LICENSE" Pack="true" PackagePath="\" />
-    <None Include="..\README.md" Pack="true" PackagePath="\" />
-    <None Include="..\.img\request_headers.png" Pack="true" PackagePath=".img" />
-    <None Include="..\.img\response_headers.png" Pack="true" PackagePath=".img" />
-
+    <None Include="..\LICENSE" Pack="true" PackagePath="\">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="..\README.md" Pack="true" PackagePath="\">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
+
+  <Target Name="CopyFiles" AfterTargets="Build">
+    <Copy SourceFiles="..\LICENSE;..\README.md" DestinationFolder="$(MSBuildThisFileDirectory)" SkipUnchangedFiles="false" />
+  </Target>
 
 </Project>
