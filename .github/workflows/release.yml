@@ -32,8 +32,17 @@ jobs:
         run: |
           set -euo pipefail
 
-          # call and parse GitHub API to get the run details of RC_RUN_ID
-          # https://docs.github.com/en/rest/reference/actions#get-a-workflow-run
+          #TODO: use CURL to test the RC_RUN_ID by using the GitHub API to check its existence
+          RESPONSE=$(curl -s -H "Authorization: token ${{ secrets.GH_TOKEN }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            --silent \
+            https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ inputs.RC_RUN_ID }}) || { echo "Failed to get the status of the run ID: ${{ inputs.RC_RUN_ID }}"; exit 1; }
+
+          echo -e "\n\nRESPONSE: $RESPONSE\n\n"
+          status=$(echo $RESPONSE | jq -r '.status')
+
+          # if not complated, then exit 1
+          [ "$status" != "completed" ] && { echo "The run ID: ${{ inputs.RC_RUN_ID }} is not completed yet!"; exit 1; }
 
 
           DW_PATH="${{ steps.common.outputs.workflow-tmp-dir }}/release"
@@ -140,8 +149,9 @@ jobs:
           token: ${{ secrets.GH_TOKEN }}
           name: v${{ steps.common.outputs.branch-version }}
           tag_name: v${{ steps.common.outputs.branch-version }}
-          draft: false
+          draft: true
           prerelease: false
           generate_release_notes: true
+          
           
           
