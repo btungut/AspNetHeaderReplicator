@@ -1,3 +1,9 @@
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/btungut/AspNetHeaderReplicator/release.yml?branch=rc%2Fv0.9.1&link=https%3A%2F%2Fgithub.com%2Fbtungut%2FAspNetHeaderReplicator%2Factions%2Fruns%2F12960628609)
+![Static Badge](https://img.shields.io/badge/Coverage-88.4%25-green?link=https%3A%2F%2Fgithub.com%2Fbtungut%2FAspNetHeaderReplicator%2Freleases%2Ftag%2Fv0.9.1)
+![GitHub Release](https://img.shields.io/github/v/release/btungut/AspNetHeaderReplicator?display_name=release)
+![NuGet Version](https://img.shields.io/nuget/v/AspNetHeaderReplicator?color=green&link=https%3A%2F%2Fwww.nuget.org%2Fpackages%2FAspNetHeaderReplicator%2F0.9.1)
+
+
 # AspNetHeaderReplicator
 
 This is a simple library that exposes a middleware for ASP.NET Core applications that **replicates headers from the request to the response** with the ability to **include or exclude** specific headers.
@@ -7,13 +13,13 @@ This is a simple library that exposes a middleware for ASP.NET Core applications
 AspNetHeaderReplicator is available as a NuGet package. You can install it using the NuGet Package Manager Console:
 
 ```bash
-dotnet add package AspNetHeaderReplicator
+dotnet add package AspNetHeaderReplicator --version 0.9.1
 ```
 
 Or with the `nuget` command:
 
 ```bash
-nuget install AspNetHeaderReplicator
+nuget install AspNetHeaderReplicator -Version 0.9.1
 ```
 
 ---
