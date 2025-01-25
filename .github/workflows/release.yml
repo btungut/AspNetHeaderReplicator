@@ -96,7 +96,7 @@ jobs:
           popd
 
           echo "Validation of artifacts in $DW_PATH is successful! dotnet pack could be called now!"
-          
+
 
       - name: dotnet_pack
         id: dotnet_pack
@@ -119,7 +119,7 @@ jobs:
 
           dotnet pack \
             -c Release \
-            --verbosity $DOTNET_VERBOSITY \
+            --verbosity minimal \
             --no-build \
             --no-restore \
             -p:PackageVersion="$PACKAGE_VERSION" \
