@@ -73,7 +73,7 @@ jobs:
           upload-built-src: true
           version-assembly: ${{ steps.common.outputs.branch-version }}
 
-          
+        #TODO: runner.temp refactor !!!
       - name: dotnet_pack
         id: dotnet_pack
         shell: bash

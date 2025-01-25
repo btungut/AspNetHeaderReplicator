@@ -49,7 +49,7 @@ jobs:
               exit 1
           fi
           echo "inputs.RC_RUN_ID: $RC_RUN_ID"
-                  
+
 
           BRANCH_VERSION="${{ steps.common.outputs.branch-version }}"
           if [ -z "$BRANCH_VERSION" ]; then
@@ -99,6 +99,38 @@ jobs:
 
           sleep 120s
           exit 1
+
+      - name: dotnet_pack
+        id: dotnet_pack
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "PWD = $(pwd)"
+
+          OUTPUT_DIR="./.nuget"
+          rm -rf $OUTPUT_DIR
+          mkdir -p $OUTPUT_DIR
+          OUTPUT_DIR=$(realpath $OUTPUT_DIR)
+          echo "OUTPUT_DIR=$OUTPUT_DIR" >> $GITHUB_ENV
+          echo "OUTPUT_DIR=$OUTPUT_DIR"
+
+          
+          PACKAGE_VERSION="${{ steps.common.outputs.branch-version }}"
+          echo "PACKAGE_VERSION=$PACKAGE_VERSION" >> $GITHUB_ENV
+          echo "PACKAGE_VERSION=$PACKAGE_VERSION"
+
+          dotnet pack \
+            -c Release \
+            --verbosity $DOTNET_VERBOSITY \
+            --no-build \
+            --no-restore \
+            -p:PackageVersion="$PACKAGE_VERSION" \
+            --output $OUTPUT_DIR
+
+          echo -e "\n\nls for $OUTPUT_DIR\n"
+          ls -al $OUTPUT_DIR
+
+        working-directory: ${{ env.DW_PATH }}
         
 
       # - name: create_release
