@@ -41,22 +41,22 @@ jobs:
           mkdir -p $DW_PATH
           echo "DW_PATH=$DW_PATH" >> $GITHUB_ENV
           echo "DW_PATH=$DW_PATH"
-          
+    
 
           RC_RUN_ID="${{ inputs.RC_RUN_ID }}"
-          if [ -z "$RC_RUN_ID" ]; then
+          if [ -z "${{ inputs.RC_RUN_ID }}" ]; then
               echo "inputs.RC_RUN_ID is null or empty whitespace!"
               exit 1
           fi
-          echo "RC_RUN_ID=$RC_RUN_ID" >> $GITHUB_ENV
-          echo "RC_RUN_ID=$RC_RUN_ID"         
+          echo "inputs.RC_RUN_ID: $RC_RUN_ID"
+                  
 
           BRANCH_VERSION="${{ steps.common.outputs.branch-version }}"
           if [ -z "$BRANCH_VERSION" ]; then
               echo "steps.common.outputs.branch-version is null or empty whitespace!"
               exit 1
           fi
-          echo "BRANCH_VERSION: $BRANCH_VERSION"
+          echo "steps.common.outputs.branch-version: $BRANCH_VERSION"
 
 
       - name: download_artifacts
