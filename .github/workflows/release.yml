@@ -131,14 +131,17 @@ jobs:
         working-directory: ${{ env.DW_PATH }}
         
 
-      # - name: create_release
-      #   id: create_release
-      #   uses: actions/create-release@v1
-      #   with:
-      #     tag_name: ${{ steps.iteration_vars.outputs.BRANCH_VERSION }}
-      #     release_name: ${{ steps.iteration_vars.outputs.BRANCH_VERSION }}
-      #     body: |
-      #       Release candidate run ID: ${{ steps.iteration_vars.outputs.RC_RUN_ID }}
-      #     draft: false
-      #     prerelease: false
-      #     token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            ${{ env.OUTPUT_DIR }}/*.nupkg
+            ${{ env.OUTPUT_DIR }}/*.snupkg
+          token: ${{ secrets.GH_TOKEN }}
+          name: v${{ steps.common.outputs.branch-version }}
+          tag_name: v${{ steps.common.outputs.branch-version }}
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+          
+          
