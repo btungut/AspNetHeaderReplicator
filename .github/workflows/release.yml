@@ -96,9 +96,7 @@ jobs:
           popd
 
           echo "Validation of artifacts in $DW_PATH is successful! dotnet pack could be called now!"
-
-          sleep 120s
-          exit 1
+          
 
       - name: dotnet_pack
         id: dotnet_pack
