@@ -1,8 +1,7 @@
-![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/btungut/AspNetHeaderReplicator/release.yml?branch=rc%2Fv0.9.1&link=https%3A%2F%2Fgithub.com%2Fbtungut%2FAspNetHeaderReplicator%2Factions%2Fruns%2F12960628609)
-![Static Badge](https://img.shields.io/badge/Coverage-88.4%25-green?link=https%3A%2F%2Fgithub.com%2Fbtungut%2FAspNetHeaderReplicator%2Freleases%2Ftag%2Fv0.9.1)
-![GitHub Release](https://img.shields.io/github/v/release/btungut/AspNetHeaderReplicator?display_name=release)
-![NuGet Version](https://img.shields.io/nuget/v/AspNetHeaderReplicator?color=green&link=https%3A%2F%2Fwww.nuget.org%2Fpackages%2FAspNetHeaderReplicator%2F0.9.1)
-
+[![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/btungut/AspNetHeaderReplicator/release.yml?branch=rc%2Fv0.9.1)](https://github.com/btungut/AspNetHeaderReplicator/actions/runs/12960628609)
+[![Code Coverage](https://img.shields.io/badge/Coverage-88.4%25-green)](https://github.com/btungut/AspNetHeaderReplicator/releases/tag/v0.9.1)
+[![GitHub Release](https://img.shields.io/github/v/release/btungut/AspNetHeaderReplicator?display_name=release)](https://github.com/btungut/AspNetHeaderReplicator/releases/tag/v0.9.1)
+[![NuGet Version](https://img.shields.io/nuget/v/AspNetHeaderReplicator?color=green)](https://www.nuget.org/packages/AspNetHeaderReplicator/0.9.1)
 
 # AspNetHeaderReplicator
 
